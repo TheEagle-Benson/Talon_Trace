@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Talon Trace | Trails</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+ <div class="app" id="app">
+  <section class="screen is-active" id="screen-trails" aria-label="My Trails">
+
+    <header class="top-header">
+      <h1 class="top-header__title">My Trails</h1>
+      <a href="settings.html" class="top-header__action" id="trailsSettingsShortcut" aria-label="Settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 13a7.6 7.6 0 000-2l2-1.5-2-3.4-2.3.9a7.6 7.6 0 00-1.7-1L15 3.5h-4l-.4 2.5a7.6 7.6 0 00-1.7 1l-2.3-.9-2 3.4L6.6 11a7.6 7.6 0 000 2l-2 1.5 2 3.4 2.3-.9c.5.4 1.1.75 1.7 1l.4 2.5h4l.4-2.5c.6-.25 1.2-.6 1.7-1l2.3.9 2-3.4-2-1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      </a>
+    </header>
+
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input type="search" id="trailSearchInput" placeholder="Search your trails…" aria-label="Search trails">
+      <button class="search-bar__filter" id="trailFilterBtn" aria-label="Filter trails">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div class="filter-chips">
+      <button class="filter-chip is-selected" data-filter="all">All Trails</button>
+      <button class="filter-chip" data-filter="recent">Recent</button>
+      <button class="filter-chip" data-filter="longest">Longest</button>
+      <button class="filter-chip" data-filter="favorites">Favorites</button>
+    </div>
+
+    <div class="trail-list" id="trailListContainer">
+
+      <button class="trail-card" data-demo-nav-target="screen-trail-detail" data-trail-id="dads-place">
+        <span class="trail-card__thumb">
+          <svg viewBox="0 0 66 66" fill="none" aria-hidden="true"><path d="M10 55 L25 40 L22 25 L38 18 L45 8" stroke="#D9922E" stroke-width="2" stroke-linecap="round" fill="none"/><circle cx="10" cy="55" r="2.5" fill="#3FC9A8"/><circle cx="45" cy="8" r="2.5" fill="#D9922E"/></svg>
+        </span>
+        <span class="trail-card__body">
+          <span class="trail-card__name">Dad's Place Trail</span>
+          <span class="trail-card__stats"><span class="dist">1.24 km</span><span class="sep">·</span>36 points</span>
+          <span class="trail-card__date">August 16, 2026</span>
+        </span>
+      </button>
+
+      <button class="trail-card" data-demo-nav-target="screen-trail-detail" data-trail-id="morning-walk">
+        <span class="trail-card__thumb">
+          <svg viewBox="0 0 66 66" fill="none" aria-hidden="true"><path d="M14 50 L30 45 L28 30 L42 22" stroke="#D9922E" stroke-width="2" stroke-linecap="round" fill="none"/><circle cx="14" cy="50" r="2.5" fill="#3FC9A8"/><circle cx="42" cy="22" r="2.5" fill="#D9922E"/></svg>
+        </span>
+        <span class="trail-card__body">
+          <span class="trail-card__name">Morning Walk</span>
+          <span class="trail-card__stats"><span class="dist">0.86 km</span><span class="sep">·</span>22 points</span>
+          <span class="trail-card__date">August 14, 2026</span>
+        </span>
+      </button>
+
+      <button class="trail-card" data-demo-nav-target="screen-trail-detail" data-trail-id="bush-path">
+        <span class="trail-card__thumb">
+          <svg viewBox="0 0 66 66" fill="none" aria-hidden="true"><path d="M8 58 L20 42 L18 28 L34 25 L40 12 L52 6" stroke="#D9922E" stroke-width="2" stroke-linecap="round" fill="none"/><circle cx="8" cy="58" r="2.5" fill="#3FC9A8"/><circle cx="52" cy="6" r="2.5" fill="#D9922E"/></svg>
+        </span>
+        <span class="trail-card__body">
+          <span class="trail-card__name">Bush Path</span>
+          <span class="trail-card__stats"><span class="dist">2.31 km</span><span class="sep">·</span>58 points</span>
+          <span class="trail-card__date">August 9, 2026</span>
+        </span>
+      </button>
+
+      <button class="trail-card" data-demo-nav-target="screen-trail-detail" data-trail-id="riverside">
+        <span class="trail-card__thumb">
+          <svg viewBox="0 0 66 66" fill="none" aria-hidden="true"><path d="M12 48 L28 50 L34 34 L30 20 L44 14" stroke="#D9922E" stroke-width="2" stroke-linecap="round" fill="none"/><circle cx="12" cy="48" r="2.5" fill="#3FC9A8"/><circle cx="44" cy="14" r="2.5" fill="#D9922E"/></svg>
+        </span>
+        <span class="trail-card__body">
+          <span class="trail-card__name">Riverside Route</span>
+          <span class="trail-card__stats"><span class="dist">3.05 km</span><span class="sep">·</span>74 points</span>
+          <span class="trail-card__date">August 2, 2026</span>
+        </span>
+      </button>
+
+      <button class="trail-card" data-demo-nav-target="screen-trail-detail" data-trail-id="hilltop">
+        <span class="trail-card__thumb">
+          <svg viewBox="0 0 66 66" fill="none" aria-hidden="true"><path d="M16 52 L24 36 L20 24 L36 16 L38 6" stroke="#D9922E" stroke-width="2" stroke-linecap="round" fill="none"/><circle cx="16" cy="52" r="2.5" fill="#3FC9A8"/><circle cx="38" cy="6" r="2.5" fill="#D9922E"/></svg>
+        </span>
+        <span class="trail-card__body">
+          <span class="trail-card__name">Hilltop Lookout</span>
+          <span class="trail-card__stats"><span class="dist">1.78 km</span><span class="sep">·</span>44 points</span>
+          <span class="trail-card__date">July 27, 2026</span>
+        </span>
+      </button>
+
+    </div>
+
+    <!-- Empty state markup — hidden by default, shown when trail list is empty -->
+    <div class="empty-state" id="trailsEmptyState" style="display:none;">
+      <span class="empty-state__icon">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 19 L9 10 L12 14 L16 6 L20 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <h3>No trails yet</h3>
+      <p>Trails you record will appear here, ready to view, follow again, or export.</p>
+      <a href="record.html" class="btn btn--primary">Record New Trail</a>
+    </div>
+
+    <div class="bottom-spacer"></div>
+  </section>
+  <!-- ==================== BOTTOM NAVIGATION ==================== -->
+<nav class="bottom-nav" aria-label="Primary">
+
+  <a href="home.html"
+     class="nav-btn is-active"
+     data-nav-id="home"
+     aria-label="Home">
+    <span class="nav-btn__indicator"></span>
+
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M4 11.5L12 4l8 7.5M6 10v9h12v-9"
+        stroke="currentColor"
+        stroke-width="1.9"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+    </svg>
+
+    <span class="nav-btn__label">Home</span>
+  </a>
+
+
+  <a href="trails.html"
+     class="nav-btn"
+     data-nav-id="trails"
+     aria-label="My Trails">
+    <span class="nav-btn__indicator"></span>
+
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M4 19 L9 10 L12 14 L16 6 L20 19"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+    </svg>
+
+    <span class="nav-btn__label">Trails</span>
+  </a>
+
+
+  <a href="record.html"
+     class="nav-btn nav-btn--record"
+     data-nav-id="record"
+     aria-label="Record new trail">
+
+    <span class="nav-btn__record-circle">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle
+          cx="12"
+          cy="12"
+          r="9"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+        <circle
+          cx="12"
+          cy="12"
+          r="3.5"
+          fill="currentColor"/>
+      </svg>
+    </span>
+
+    <span class="nav-btn__label">Record</span>
+  </a>
+
+
+  <a href="offline.html"
+     class="nav-btn"
+     data-nav-id="offline"
+     aria-label="Offline maps">
+    <span class="nav-btn__indicator"></span>
+
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2V6z"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linejoin="round"/>
+    </svg>
+
+    <span class="nav-btn__label">Maps</span>
+  </a>
+
+
+  <a href="settings.html"
+     class="nav-btn"
+     data-nav-id="settings"
+     aria-label="Settings">
+    <span class="nav-btn__indicator"></span>
+
+    <svg viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 13a7.6 7.6 0 000-2l2-1.5-2-3.4-2.3.9a7.6 7.6 0 00-1.7-1L15 3.5h-4l-.4 2.5a7.6 7.6 0 00-1.7 1l-2.3-.9-2 3.4L6.6 11a7.6 7.6 0 000 2l-2 1.5 2 3.4 2.3-.9c.5.4 1.1.75 1.7 1l.4 2.5h4l.4-2.5c.6-.25 1.2-.6 1.7-1l2.3.9 2-3.4-2-1.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+
+    <span class="nav-btn__label">Settings</span>
+  </a>
+
+</nav>
+ </div>
+</body>
+</html>

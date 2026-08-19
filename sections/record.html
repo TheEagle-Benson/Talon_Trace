@@ -1,0 +1,200 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Talon Trace | Record</title>
+    <link rel="stylesheet" href="../css/style.css">
+  </head>
+  <body>
+  <div class="app" id="app">
+  <section class="screen is-active record-screen" id="screen-record" aria-label="Record Trail">
+
+    <div class="record-map-wrap">
+      <!-- Real Leaflet map mounts here later -->
+      <div id="map" class="map-surface">
+        <div class="map-surface__grid"></div>
+        <div class="map-surface__contours">
+          <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <path d="M-20 380 C 60 340, 100 420, 180 380 S 300 320, 420 360" stroke="#3FC9A8" stroke-width="1" fill="none" opacity="0.3"/>
+            <path d="M-20 300 C 80 270, 140 340, 220 300 S 340 250, 420 290" stroke="#3FC9A8" stroke-width="1" fill="none" opacity="0.22"/>
+            <path d="M-20 420 C 70 400, 130 460, 220 430 S 320 400, 420 430" stroke="#3FC9A8" stroke-width="1" fill="none" opacity="0.18"/>
+          </svg>
+        </div>
+        <svg class="map-surface__path" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <path d="M120 420 L160 360 L150 300 L200 260 L210 190 L260 150" stroke="#D9922E" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="120" cy="420" r="6" fill="#3FC9A8" stroke="#0B0F14" stroke-width="2"/>
+        </svg>
+        <div class="map-surface__you" style="left:255px; top:145px;">
+          <div class="map-surface__you-ring"></div>
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" style="position:relative;">
+            <circle cx="10" cy="10" r="7" fill="#3FC9A8" stroke="#0B0F14" stroke-width="2.5"/>
+          </svg>
+        </div>
+        <div class="map-surface__badge">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M2 12h20" stroke="currentColor" stroke-width="1.5"/></svg>
+          5.603°N, 0.187°W
+        </div>
+        <div class="map-surface__zoom">
+          <button aria-label="Zoom in" id="mapZoomIn">+</button>
+          <button aria-label="Zoom out" id="mapZoomOut">−</button>
+        </div>
+        <div class="map-surface__attribution">Map data placeholder</div>
+      </div>
+
+      <div class="record-topbar">
+        <button class="record-topbar__back" id="recordBackBtn" data-demo-nav-target="screen-home" aria-label="Back to home">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="record-status" id="recordStatusPill">
+          <span class="record-status__dot"></span>
+          Not Recording
+        </div>
+      </div>
+    </div>
+
+    <div class="record-sheet" id="recordSheet" data-state="idle">
+      <div class="record-sheet__handle"></div>
+
+      <div class="record-idle-copy">
+        <h3>Trace a new trail</h3>
+        <p>Your position will be logged every 30 seconds and joined into a path. Works fully offline.</p>
+      </div>
+
+      <div class="record-metrics">
+        <div class="record-metric record-metric--primary">
+          <div class="record-metric__label">Distance</div>
+          <div class="record-metric__value" id="recordDistanceValue">0.34<span class="unit">km</span></div>
+        </div>
+        <div class="record-metric">
+          <div class="record-metric__label">Points</div>
+          <div class="record-metric__value" id="recordPointsValue">12</div>
+        </div>
+        <div class="record-metric">
+          <div class="record-metric__label">Duration</div>
+          <div class="record-metric__value" id="recordDurationValue">06:24</div>
+        </div>
+      </div>
+
+      <div class="record-subrow">
+        <span>GPS accuracy: <strong class="accuracy-good" id="recordAccuracyValue">±4m</strong></span>
+        <span id="recordLastFix">Last fix 3s ago</span>
+      </div>
+
+      <div class="record-actions">
+        <button class="btn btn--primary" id="startTrailBtn">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.5" fill="currentColor"/></svg>
+          Start Trail
+        </button>
+
+        <button class="record-pause-btn" id="pauseTrailBtn" aria-label="Pause recording">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/></svg>
+        </button>
+        <button class="btn btn--danger" id="endTrailBtn">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>
+          End Trail
+        </button>
+      </div>
+    </div>
+  </section>
+  <!-- ==================== BOTTOM NAVIGATION ==================== -->
+<nav class="bottom-nav" aria-label="Primary">
+
+  <a href="home.html"
+     class="nav-btn is-active"
+     data-nav-id="home"
+     aria-label="Home">
+    <span class="nav-btn__indicator"></span>
+
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M4 11.5L12 4l8 7.5M6 10v9h12v-9"
+        stroke="currentColor"
+        stroke-width="1.9"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+    </svg>
+
+    <span class="nav-btn__label">Home</span>
+  </a>
+
+
+  <a href="trails.html"
+     class="nav-btn"
+     data-nav-id="trails"
+     aria-label="My Trails">
+    <span class="nav-btn__indicator"></span>
+
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M4 19 L9 10 L12 14 L16 6 L20 19"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+    </svg>
+
+    <span class="nav-btn__label">Trails</span>
+  </a>
+
+
+  <a href="record.html"
+     class="nav-btn nav-btn--record"
+     data-nav-id="record"
+     aria-label="Record new trail">
+
+    <span class="nav-btn__record-circle">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle
+          cx="12"
+          cy="12"
+          r="9"
+          stroke="currentColor"
+          stroke-width="2"/>
+
+        <circle
+          cx="12"
+          cy="12"
+          r="3.5"
+          fill="currentColor"/>
+      </svg>
+    </span>
+
+    <span class="nav-btn__label">Record</span>
+  </a>
+
+
+  <a href="offline.html"
+     class="nav-btn"
+     data-nav-id="offline"
+     aria-label="Offline maps">
+    <span class="nav-btn__indicator"></span>
+
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2V6z"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linejoin="round"/>
+    </svg>
+
+    <span class="nav-btn__label">Maps</span>
+  </a>
+
+
+  <a href="settings.html"
+     class="nav-btn"
+     data-nav-id="settings"
+     aria-label="Settings">
+    <span class="nav-btn__indicator"></span>
+
+    <svg viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 13a7.6 7.6 0 000-2l2-1.5-2-3.4-2.3.9a7.6 7.6 0 00-1.7-1L15 3.5h-4l-.4 2.5a7.6 7.6 0 00-1.7 1l-2.3-.9-2 3.4L6.6 11a7.6 7.6 0 000 2l-2 1.5 2 3.4 2.3-.9c.5.4 1.1.75 1.7 1l.4 2.5h4l.4-2.5c.6-.25 1.2-.6 1.7-1l2.3.9 2-3.4-2-1.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+
+    <span class="nav-btn__label">Settings</span>
+  </a>
+
+</nav>
+  </div>
+  </body>
+  </html>
