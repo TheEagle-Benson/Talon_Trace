@@ -1,4 +1,6 @@
 let user_error_str
+let watchID = null 
+const temp_coords = Array()
 let geo_optional_args = {
   enableHighAccuracy: true,
   timeout: 120000,
@@ -6,11 +8,10 @@ let geo_optional_args = {
 }
 
 function success_callback(position) {
-  coordinates = position.coords
-  lat = coordinates.latitude
-  long = coordinates.longitude
-  accuracy = coordinates.accuracy
-  console.log({lat, long, accuracy})
+  const {latitude, longitude, accuracy} = position.coords
+  let coords = {lat: latitude, long: longitude, accuracy}
+  handleCoords(coords)
+  console.log(coords)
 }
 
 function error_callback(error) {
@@ -41,6 +42,14 @@ function get_location() {
     console.warn('Your browser does not support geolocation.')
     return
   }
-  geolocation.watchPosition(success_callback, error_callback, geo_optional_args)
+   watchID = geolocation.watchPosition(success_callback, error_callback, geo_optional_args)
+  
 }
+
+function handleCoords(coords) {
+  temp_coords.push(coords)
+  console.table(coords)
+}
+
+
 get_location()
