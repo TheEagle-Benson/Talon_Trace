@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Talon Trace | Record</title>
+    <link rel="stylesheet" href="../libs/leaflet/leaflet.css">
     <link rel="stylesheet" href="../css/style.css">
   </head>
   <body>
@@ -14,7 +15,7 @@
     <div class="record-map-wrap">
       <!-- Real Leaflet map mounts here later -->
       <div id="map" class="map-surface">
-        <div class="map-surface__grid"></div>
+        <!--<div class="map-surface__grid"></div>
         <div class="map-surface__contours">
           <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
             <path d="M-20 380 C 60 340, 100 420, 180 380 S 300 320, 420 360" stroke="#3FC9A8" stroke-width="1" fill="none" opacity="0.3"/>
@@ -31,15 +32,15 @@
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" style="position:relative;">
             <circle cx="10" cy="10" r="7" fill="#3FC9A8" stroke="#0B0F14" stroke-width="2.5"/>
           </svg>
-        </div>
-        <div class="map-surface__badge">
+        </div>-->
+        <!--<div class="map-surface__badge">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M2 12h20" stroke="currentColor" stroke-width="1.5"/></svg>
           5.603°N, 0.187°W
         </div>
         <div class="map-surface__zoom">
           <button aria-label="Zoom in" id="mapZoomIn">+</button>
           <button aria-label="Zoom out" id="mapZoomOut">−</button>
-        </div>
+        </div>-->
         <div class="map-surface__attribution">Map data placeholder</div>
       </div>
 
@@ -196,6 +197,8 @@
 
 </nav>
   </div>
-  <script type="text/javascript" charset="utf-8" src="../js/record.js"></script>
+  <script type="text/javascript" charset="utf-8" src="../libs/leaflet/leaflet.js"></script>
+  <script type="module" charset="utf-8" src="../js/record.js"></script>
+  <script type="module" charset="utf-8" src="../js/gps.js"></script>
   </body>
   </html>

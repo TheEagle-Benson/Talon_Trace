@@ -1,40 +1,5 @@
-let user_error_str
+import {geo_optional_args, success_callback, error_callback, } from './gps.js';
 let watchID = null 
-const temp_coords = Array()
-let geo_optional_args = {
-  enableHighAccuracy: true,
-  timeout: 120000,
-  maximumAge: 0
-}
-
-function success_callback(position) {
-  const {latitude, longitude, accuracy} = position.coords
-  let coords = {lat: latitude, long: longitude, accuracy}
-  handleCoords(coords)
-  console.log(coords)
-}
-
-function error_callback(error) {
-  switch (error.code) {
-    case 1:
-      console.warn("User denied location access")
-      user_error_str = "You denied location access. Kindly allow location for this site."
-      break;
-      case 2:
-        console.warn("location information is not available")
-        user_error_str = "Could not get your location information."
-        break;
-      case 3:
-        console.warn("Request timeout")
-        user_error_str = `Request timeout. Could not resolve your location within ${geo_optional_args.timeout / 60000} minutes`
-        console.log(user_error_str)
-        break;
-      
-    default:
-      console.error("An unknown error occured", error.message)
-      user_error_str = "An unknown error occurred"
-  }
-}
 
 function get_location() {
   let geolocation = navigator.geolocation
@@ -46,10 +11,36 @@ function get_location() {
   
 }
 
-function handleCoords(coords) {
-  temp_coords.push(coords)
-  console.table(coords)
+function plotCoords() {
+  const map = window.L.map('map').setView([8.0485,-1.7309], 8)
+  window.L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+
+const trailCoordinates = [
+  [5.6037, -0.1870],
+  [5.6041, -0.1875],
+  [5.6046, -0.1883],
+  [5.6052, -0.1892],
+  [5.6059, -0.1903],
+  [5.6065, -0.1915],
+  [5.6068, -0.1930],
+  [5.6072, -0.1948],
+  [5.6079, -0.1967],
+  [5.6085, -0.1989],
+  [5.6090, -0.2012],
+  [5.6096, -0.2035],
+  [5.6104, -0.2058],
+  [5.6112, -0.2080],
+  [5.6120, -0.2102]
+];
+
+let trail = L.polyline(trailCoordinates, {
+    color: 'green',
+    weight: 4
+}).addTo(map);
 }
 
-
+plotCoords()
 get_location()
