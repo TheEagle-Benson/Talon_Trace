@@ -11,6 +11,16 @@ function get_location() {
   
 }
 
+function stopWatch() {
+  let geolocation = navigator.geolocation
+  if (!geolocation) {
+    console.warn('Your browser does not support geolocation.')
+    return
+  }
+  geolocation.clearWatch(watchID)
+}
+
+
 function plotCoords() {
   const map = window.L.map('map').setView([8.0485,-1.7309], 8)
   window.L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
