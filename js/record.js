@@ -20,6 +20,18 @@ function stopWatch() {
   geolocation.clearWatch(watchID)
 }
 
+function pauseWatch() {
+  let geolocation = navigator.geolocation
+  if (!geolocation) {
+    console.warn('Your browser does not support geolocation.')
+    return
+  }
+  geolocation.clearWatch(watchID)
+}
+
+function resumeWatch() {
+  get_location()
+}
 
 function plotCoords() {
   const map = window.L.map('map').setView([8.0485,-1.7309], 8)
