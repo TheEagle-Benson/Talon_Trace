@@ -1,13 +1,19 @@
 import {geo_optional_args, success_callback, error_callback, } from './gps.js';
-let watchID = null 
 
-function get_location() {
+let watchID = null
+let isWatching = false
+
+function startWatch() {
   let geolocation = navigator.geolocation
   if (!geolocation) {
     console.warn('Your browser does not support geolocation.')
     return
   }
+  if (isWatching && !watchID) {
+    return
+  }
    watchID = geolocation.watchPosition(success_callback, error_callback, geo_optional_args)
+   isWatching = true
   
 }
 
@@ -17,6 +23,9 @@ function stopWatch() {
     console.warn('Your browser does not support geolocation.')
     return
   }
+  if (!isWatching && !watchID) {
+    return
+  }
   geolocation.clearWatch(watchID)
 }
 
@@ -24,6 +33,9 @@ function pauseWatch() {
   let geolocation = navigator.geolocation
   if (!geolocation) {
     console.warn('Your browser does not support geolocation.')
+    return
+  }
+  if (!isWatching && !watchID) {
     return
   }
   geolocation.clearWatch(watchID)
