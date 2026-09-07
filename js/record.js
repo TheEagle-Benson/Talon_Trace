@@ -1,7 +1,9 @@
-import {geo_optional_args, success_callback, error_callback, } from './gps.js';
+import {geo_optional_args, success_callback, error_callback, matrixList, filteredCoords, updateTrailsCallback } from './gps.js';
 
 let watchID = null
 let isWatching = false
+let map
+let trail
 
 function startWatch() {
   let geolocation = navigator.geolocation
@@ -9,12 +11,11 @@ function startWatch() {
     console.warn('Your browser does not support geolocation.')
     return
   }
-  if (isWatching && !watchID) {
+  if (isWatching && watchID !== null) {
     return
   }
    watchID = geolocation.watchPosition(success_callback, error_callback, geo_optional_args)
    isWatching = true
-  
 }
 
 function stopWatch() {
@@ -23,10 +24,12 @@ function stopWatch() {
     console.warn('Your browser does not support geolocation.')
     return
   }
-  if (!isWatching && !watchID) {
+  if (!isWatching && watchID === null) {
     return
   }
   geolocation.clearWatch(watchID)
+  isWatching = false
+  watchID = null
 }
 
 function pauseWatch() {
@@ -35,46 +38,42 @@ function pauseWatch() {
     console.warn('Your browser does not support geolocation.')
     return
   }
-  if (!isWatching && !watchID) {
+  if (!isWatching && watchID === null) {
     return
   }
   geolocation.clearWatch(watchID)
+  isWatching = false
+  watchID = null
 }
 
 function resumeWatch() {
-  get_location()
+  startWatch()
 }
 
 function plotCoords() {
-  const map = window.L.map('map').setView([8.0485,-1.7309], 8)
+  map = window.L.map('map').setView([0,0], 15)
   window.L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-const trailCoordinates = [
-  [5.6037, -0.1870],
-  [5.6041, -0.1875],
-  [5.6046, -0.1883],
-  [5.6052, -0.1892],
-  [5.6059, -0.1903],
-  [5.6065, -0.1915],
-  [5.6068, -0.1930],
-  [5.6072, -0.1948],
-  [5.6079, -0.1967],
-  [5.6085, -0.1989],
-  [5.6090, -0.2012],
-  [5.6096, -0.2035],
-  [5.6104, -0.2058],
-  [5.6112, -0.2080],
-  [5.6120, -0.2102]
-];
 
-let trail = L.polyline(trailCoordinates, {
-    color: 'green',
-    weight: 4
-}).addTo(map);
+trail = L.polyline([], {
+  color: 'green',
+  weight: 4,
+}).addTo(map)
 }
 
+function updateTrail() {
+  trail.setLatLngs(matrixList)
+  if (matrixList.length > 0) {
+  let currCoords = matrixList[matrixList.length - 1]
+  map.panTo(currCoords)
+}
+console.log('Drawn')
+}
+
+
+updateTrailsCallback(updateTrail)
 plotCoords()
-get_location()
+startWatch()

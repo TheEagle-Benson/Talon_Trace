@@ -1,9 +1,10 @@
 let user_error_str
-let matrixList = []
+let coordsUpdate
+export let matrixList = []
 const MAX_ACCURACY = 20
 const MIN_DISTANCE = 5
 const temp_coords = Array()
-const filteredCoords = Array()
+export const filteredCoords = Array()
 
 
 export let geo_optional_args = {
@@ -45,6 +46,9 @@ function handleCoords(coords) {
   temp_coords.push(coords)
   filterCoords(coords)
   makeMatrixList()
+  if (typeof coordsUpdate === 'function') {
+    coordsUpdate()
+  }
   console.table("Coords Table log",coords)
   console.log("Matrix log",matrixList)
 }
@@ -113,4 +117,8 @@ function filterCoords(coords) {
   }
   }
   return 
+}
+
+export function updateTrailsCallback(callbackFunc) {
+  coordsUpdate = callbackFunc
 }
