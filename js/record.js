@@ -4,6 +4,19 @@ let watchID = null
 let isWatching = false
 let map
 let trail
+let totalDistanceInMeters = 0
+let startTime = 0
+let endTime = 0
+let elapsedTimeBeforePaused = 0
+let totalElapsedTime = 0
+
+const States = Object.freeze({
+  RECORDING: "RECORDING",
+  PAUSED: "PAUSED",
+  IDLE: "IDLE"
+})
+
+let engineState = States.IDLE
 
 function startWatch() {
   let geolocation = navigator.geolocation
@@ -15,6 +28,8 @@ function startWatch() {
     return
   }
    watchID = geolocation.watchPosition(success_callback, error_callback, geo_optional_args)
+   startTime = Date.now()
+   engineState = States.RECORDING
    isWatching = true
 }
 
@@ -28,6 +43,8 @@ function stopWatch() {
     return
   }
   geolocation.clearWatch(watchID)
+  endTime = Date.now()
+  engineState = States.IDLE
   isWatching = false
   watchID = null
 }
@@ -42,6 +59,9 @@ function pauseWatch() {
     return
   }
   geolocation.clearWatch(watchID)
+  elapsedTimeBeforePaused += (Date.now() - startTime)
+  startTime = 0
+  engineState = States.PAUSED
   isWatching = false
   watchID = null
 }
@@ -74,6 +94,6 @@ console.log('Drawn')
 }
 
 
-updateTrailsCallback(updateTrail)
-plotCoords()
-startWatch()
+// updateTrailsCallback(updateTrail)
+// plotCoords()
+// startWatch()

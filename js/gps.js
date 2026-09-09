@@ -63,7 +63,7 @@ function makeMatrixList() {
 }
 
 
-function haversineDistance(point1, point2) {
+export function haversineDistance(point1, point2) {
 
   const R = 6371000
 
