@@ -33,6 +33,16 @@ function startWatch() {
    isWatching = true
 }
 
+function startNewTrail() {
+  elapsedTimeBeforePaused = 0
+  totalElapsedTime = 0
+  totalDistanceInMeters = 0
+  startTime = 0
+  endTime = 0
+  filteredCoords.length = 0
+  startWatch()
+}
+
 function stopWatch() {
   let geolocation = navigator.geolocation
   if (!geolocation) {

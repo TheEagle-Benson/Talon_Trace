@@ -3,7 +3,6 @@ let coordsUpdate
 export let matrixList = []
 const MAX_ACCURACY = 20
 const MIN_DISTANCE = 5
-const temp_coords = Array()
 export const filteredCoords = Array()
 
 
@@ -43,7 +42,6 @@ export function error_callback(error) {
 
 
 function handleCoords(coords) {
-  temp_coords.push(coords)
   filterCoords(coords)
   makeMatrixList()
   if (typeof coordsUpdate === 'function') {
