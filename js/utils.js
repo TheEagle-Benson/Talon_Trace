@@ -1,4 +1,4 @@
-import { haversineDistance } from '.gps.js';
+import { haversineDistance } from './gps.js';
 
 export function calculateTotalDistance(arrayObject) {
   let totalDistanceInMeters = 0

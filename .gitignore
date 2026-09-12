@@ -39,6 +39,7 @@ coverage/
 tmp/
 temp/
 
-# reference and script
+# reference, script and test
 index.html
 *.sh
+test-*.js
