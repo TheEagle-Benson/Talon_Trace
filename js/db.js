@@ -7,3 +7,7 @@ db.version(1).stores({
 export async function saveTrail(trailObj) {
   return await db.trail.add(trailObj)
 }
+
+export async function getAllTrails(){
+  return await db.trail.toArray()
+}
