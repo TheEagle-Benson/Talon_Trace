@@ -52,3 +52,32 @@ export async function getTrail(id) {
     }
   }
 }
+
+export async function updateTrail(id, name = null, notes = null) {
+  try {
+    let updateObject = {}
+    if (name !== null) {
+      updateObject["name"] = name
+    }
+    if (notes !== null) {
+      updateObject["notes"] = notes
+    }
+    if (Object.keys(updateObject).length === 0
+) {
+      return {
+        status: "error",
+        message: "Provide name or notes to be able to update this trail."
+      } 
+    }
+    let update_code = await db.trail.update(id, updateObject)
+    return {
+      status: "success",
+      message_code: update_code
+    }
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message
+    }
+  }
+}
