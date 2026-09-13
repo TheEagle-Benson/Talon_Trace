@@ -4,10 +4,35 @@ db.version(1).stores({
   trail: '++id, &name, created_at'
 })
 
+
 export async function saveTrail(trailObj) {
-  return await db.trail.add(trailObj)
+  try {
+  let id = await db.trail.add(trailObj) 
+  return {
+    status: "success",
+    message: "Trail saved successfully",
+    id: id
+  }
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message
+    }
+  }
 }
 
 export async function getAllTrails(){
-  return await db.trail.toArray()
+  try {
+    let trail = await db.trail.toArray()
+    return {
+      status: "success",
+      trail: trail
+    }
+  } catch (error) {
+    return {
+      status: "error", 
+      message: error.message
+    }
+  }
+  
 }
