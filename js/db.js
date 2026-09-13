@@ -36,3 +36,19 @@ export async function getAllTrails(){
   }
   
 }
+
+export async function getTrail(id) {
+  
+  try {
+    let trail = await db.trail.get(id)
+    return {
+      status: "success",
+      trail: trail
+    }
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message
+    }
+  }
+}
