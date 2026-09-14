@@ -81,3 +81,18 @@ export async function updateTrail(id, name = null, notes = null) {
     }
   }
 }
+
+export async function deleteTrail(id) {
+  try {
+    await db.trail.delete(id)
+    return {
+      status: "success",
+      message: "Trail deleted successfully"
+    }
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message
+    }
+  }
+}
