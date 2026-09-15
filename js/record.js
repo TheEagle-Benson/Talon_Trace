@@ -123,3 +123,19 @@ endTrailBtn.addEventListener("click", (event) => {
   stopWatch()
   recordSheet.setAttribute("data-state", engineState.toLowerCase())
 })
+
+pauseResumeBtn.addEventListener("click", (event) => {
+  console.log(engineState)
+  if (engineState === States.PAUSED) {
+    resumeWatch()
+    recordSheet.setAttribute("data-state", engineState.toLowerCase())
+    return 
+  }
+  console.log(engineState)
+  if (engineState === States.RECORDING) {
+    pauseWatch()
+    recordSheet.setAttribute("data-state", engineState.toLowerCase())
+    return 
+  }
+  console.log(engineState) 
+})
