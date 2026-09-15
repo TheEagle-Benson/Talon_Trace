@@ -16,6 +16,11 @@ const States = Object.freeze({
   IDLE: "IDLE"
 })
 
+const startTrailBtn = document.querySelector("#startTrailBtn")
+const pauseResumeBtn = document.querySelector("#pauseTrailBtn")
+const endTrailBtn = document.querySelector("#endTrailBtn")
+const recordSheet = document.querySelector("#recordSheet")
+
 let engineState = States.IDLE
 
 function startWatch() {
@@ -103,7 +108,18 @@ function updateTrail() {
 console.log('Drawn')
 }
 
+startTrailBtn.addEventListener("click", (event) => {
+  if (map) {
+    map.remove()
+  }
+  updateTrailsCallback(updateTrail)
+  plotCoords()
+  startNewTrail()
+  recordSheet.setAttribute("data-state", engineState.toLowerCase())
+  
+})
 
-// updateTrailsCallback(updateTrail)
-// plotCoords()
-// startWatch()
+endTrailBtn.addEventListener("click", (event) => {
+  stopWatch()
+  recordSheet.setAttribute("data-state", engineState.toLowerCase())
+})
