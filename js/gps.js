@@ -14,7 +14,7 @@ export let geo_optional_args = {
 
 export function success_callback(position) {
   const {latitude, longitude, accuracy} = position.coords
-  let coords = {lat: latitude, long: longitude, accuracy}
+  let coords = {lat: latitude, long: longitude, accuracy, timestamp: position.timestamp}
   handleCoords(coords)
 }
 
