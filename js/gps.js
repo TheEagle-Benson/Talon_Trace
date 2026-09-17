@@ -1,5 +1,6 @@
 let user_error_str
 let coordsUpdate
+let uiUpdate
 export let matrixList = []
 const MAX_ACCURACY = 20
 const MIN_DISTANCE = 5
@@ -46,6 +47,7 @@ function handleCoords(coords) {
   makeMatrixList()
   if (typeof coordsUpdate === 'function') {
     coordsUpdate()
+    uiUpdate()
   }
   console.table("Coords Table log",coords)
   console.log("Matrix log",matrixList)
@@ -119,4 +121,8 @@ function filterCoords(coords) {
 
 export function updateTrailsCallback(callbackFunc) {
   coordsUpdate = callbackFunc
+}
+
+export function updateUi(callbackFunc) {
+  uiUpdate = callbackFunc
 }

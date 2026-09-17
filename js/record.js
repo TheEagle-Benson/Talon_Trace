@@ -1,4 +1,4 @@
-import {geo_optional_args, success_callback, error_callback, matrixList, filteredCoords, updateTrailsCallback } from './gps.js';
+import {geo_optional_args, success_callback, error_callback, matrixList, filteredCoords, updateTrailsCallback, updateUi } from './gps.js';
 
 let watchID = null
 let isWatching = false
@@ -20,6 +20,13 @@ const startTrailBtn = document.querySelector("#startTrailBtn")
 const pauseResumeBtn = document.querySelector("#pauseTrailBtn")
 const endTrailBtn = document.querySelector("#endTrailBtn")
 const recordSheet = document.querySelector("#recordSheet")
+const distanceValueDisplay = document.querySelector("#recordDistanceValue")
+const recordedPointsDisplay = document.querySelector("#recordPointsValue")
+const recordDurationDisplay = document.querySelector("#recordDurationValue")
+const recordAccuracyDisplay = document.querySelector("#recordAccuracyValue")
+const recordLastFixDisplay = document.querySelector("#recordLastFix")
+const recordingStatus = document.querySelector("#recordStatusPill")
+const recordingIndicator = document.querySelector(".record-status__dot")
 
 let engineState = States.IDLE
 
@@ -45,6 +52,7 @@ function startNewTrail() {
   startTime = 0
   endTime = 0
   filteredCoords.length = 0
+  recordedPointsDisplay.textContent = 0
   startWatch()
 }
 
@@ -108,6 +116,13 @@ function updateTrail() {
 console.log('Drawn')
 }
 
+function updateUI() {
+  let pointsRecorded = filteredCoords.length
+  recordedPointsDisplay.textContent = pointsRecorded
+}
+
+updateUi(updateUI)
+
 startTrailBtn.addEventListener("click", (event) => {
   if (map) {
     map.remove()
@@ -116,26 +131,31 @@ startTrailBtn.addEventListener("click", (event) => {
   plotCoords()
   startNewTrail()
   recordSheet.setAttribute("data-state", engineState.toLowerCase())
+  recordingStatus.classList.add("is-live")
+  recordingStatus.innerHTML = '<span class="record-status__dot"></span> Recording'
   
 })
 
 endTrailBtn.addEventListener("click", (event) => {
   stopWatch()
   recordSheet.setAttribute("data-state", engineState.toLowerCase())
+  recordingStatus.classList.remove("is-live")
+  recordingStatus.innerHTML = '<span class="record-status__dot"></span> Not Recording'
 })
 
 pauseResumeBtn.addEventListener("click", (event) => {
-  console.log(engineState)
   if (engineState === States.PAUSED) {
     resumeWatch()
     recordSheet.setAttribute("data-state", engineState.toLowerCase())
+    recordingStatus.classList.add("is-live")
+  recordingStatus.innerHTML = '<span class="record-status__dot"></span> Recording'
     return 
   }
-  console.log(engineState)
   if (engineState === States.RECORDING) {
     pauseWatch()
     recordSheet.setAttribute("data-state", engineState.toLowerCase())
+    recordingStatus.classList.remove("is-live")
+  recordingStatus.innerHTML = '<span class="record-status__dot"></span> Paused'
     return 
   }
-  console.log(engineState) 
 })
