@@ -1,4 +1,5 @@
 import {geo_optional_args, success_callback, error_callback, matrixList, filteredCoords, updateTrailsCallback, updateUi } from './gps.js';
+import { calculateTotalDistance, calculateTotalElapsedTime, formatTime } from './utils.js';
 
 let watchID = null
 let isWatching = false
@@ -9,6 +10,8 @@ let startTime = 0
 let endTime = 0
 let elapsedTimeBeforePaused = 0
 let totalElapsedTime = 0
+let durationIntervalID = null
+let lastFixIntervalID = null
 
 const States = Object.freeze({
   RECORDING: "RECORDING",
@@ -53,7 +56,13 @@ function startNewTrail() {
   endTime = 0
   filteredCoords.length = 0
   recordedPointsDisplay.textContent = 0
+  recordLastFixDisplay.textContent = `Last fix 0s ago`
+  recordDurationDisplay.textContent = '00:00:00'
+  recordAccuracyDisplay.textContent = '0m'
+  distanceValueDisplay.innerHTML = `0<span class="unit">km</span>`
   startWatch()
+  durationIntervalID = setInterval(calculateDuration, 1000)
+  lastFixIntervalID = setInterval(updateLastFix, 1000)
 }
 
 function stopWatch() {
@@ -64,6 +73,12 @@ function stopWatch() {
   }
   if (!isWatching && watchID === null) {
     return
+  }
+  if (durationIntervalID !== null) {
+      clearInterval(durationIntervalID)
+  }
+  if (lastFixIntervalID !== null) {
+      clearInterval(lastFixIntervalID)
   }
   geolocation.clearWatch(watchID)
   endTime = Date.now()
@@ -81,6 +96,12 @@ function pauseWatch() {
   if (!isWatching && watchID === null) {
     return
   }
+  if (durationIntervalID !== null) {
+      clearInterval(durationIntervalID)
+  }
+  if (lastFixIntervalID !== null) {
+      clearInterval(lastFixIntervalID)
+  }
   geolocation.clearWatch(watchID)
   elapsedTimeBeforePaused += (Date.now() - startTime)
   startTime = 0
@@ -91,6 +112,8 @@ function pauseWatch() {
 
 function resumeWatch() {
   startWatch()
+  durationIntervalID = setInterval(calculateDuration, 1000)
+  lastFixIntervalID = setInterval(updateLastFix, 1000)
 }
 
 function plotCoords() {
@@ -116,9 +139,47 @@ function updateTrail() {
 console.log('Drawn')
 }
 
+function getCurrentAccuracy() {
+  let accuracy = 0
+  if (filteredCoords.length === 0) {
+    return accuracy
+  }
+  
+  if (filteredCoords.length === 1) {
+   return accuracy = filteredCoords[0].accuracy
+  }
+  return accuracy = filteredCoords[filteredCoords.length - 1].accuracy
+}
+
+function calculateLastFix(){
+  let lastFix = 0
+  if (filteredCoords.length === 0) {
+      return lastFix
+    }
+  
+  let coordsTimestamp = filteredCoords[filteredCoords.length - 1].timestamp
+     lastFix = Math.floor((Date.now() - coordsTimestamp) / 1000)
+    return lastFix
+}
+
 function updateUI() {
   let pointsRecorded = filteredCoords.length
+  let distance = (calculateTotalDistance(filteredCoords) / 1000).toFixed(2)
+  let accuracy = getCurrentAccuracy().toFixed(2)
   recordedPointsDisplay.textContent = pointsRecorded
+  distanceValueDisplay.innerHTML = `${distance}<span class="unit">km</span>`
+  recordAccuracyDisplay.textContent = `${accuracy}m`
+}
+
+function calculateDuration() {
+  let durationSegmentsArray = calculateTotalElapsedTime(elapsedTimeBeforePaused,startTime, Date.now())
+  let duration = formatTime(durationSegmentsArray)
+  recordDurationDisplay.textContent = duration
+}
+
+function updateLastFix() {
+  let lastFix = calculateLastFix()
+  recordLastFixDisplay.textContent = `Last fix ${lastFix}s ago`
 }
 
 updateUi(updateUI)

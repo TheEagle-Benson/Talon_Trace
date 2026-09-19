@@ -47,7 +47,6 @@ function handleCoords(coords) {
   makeMatrixList()
   if (typeof coordsUpdate === 'function') {
     coordsUpdate()
-    uiUpdate()
   }
   console.table("Coords Table log",coords)
   console.log("Matrix log",matrixList)
@@ -94,6 +93,9 @@ export function haversineDistance(point1, point2) {
 function filterCoords(coords) {
   if (filteredCoords.length === 0) {
     filteredCoords.push(coords)
+    if (typeof uiUpdate === 'function') {
+           uiUpdate()
+         }
     console.log("First coordinates")
     console.log(filteredCoords)
     return
@@ -110,6 +112,9 @@ function filterCoords(coords) {
     console.log(`Distance: ${distance}`)
     if (distance >= MIN_DISTANCE) {
          filteredCoords.push(coords)
+         if (typeof uiUpdate === 'function') {
+           uiUpdate()
+         }
          console.log("Coordinates pass minimum requirements")
          console.log("Filtered coords log in filteCoords function, last",filteredCoords)
          return
