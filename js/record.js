@@ -29,7 +29,6 @@ const recordDurationDisplay = document.querySelector("#recordDurationValue")
 const recordAccuracyDisplay = document.querySelector("#recordAccuracyValue")
 const recordLastFixDisplay = document.querySelector("#recordLastFix")
 const recordingStatus = document.querySelector("#recordStatusPill")
-const recordingIndicator = document.querySelector(".record-status__dot")
 
 let engineState = States.IDLE
 
@@ -46,6 +45,7 @@ function startWatch() {
    startTime = Date.now()
    engineState = States.RECORDING
    isWatching = true
+   console.log("Recording...")
 }
 
 function startNewTrail() {
@@ -71,20 +71,25 @@ function stopWatch() {
     console.warn('Your browser does not support geolocation.')
     return
   }
-  if (!isWatching && watchID === null) {
+  if (engineState === States.IDLE) {
     return
   }
   if (durationIntervalID !== null) {
       clearInterval(durationIntervalID)
+      durationIntervalID = null
   }
   if (lastFixIntervalID !== null) {
       clearInterval(lastFixIntervalID)
+      lastFixIntervalID = null
   }
-  geolocation.clearWatch(watchID)
+  if (watchID) {
+    geolocation.clearWatch(watchID)
+  }
   endTime = Date.now()
   engineState = States.IDLE
   isWatching = false
   watchID = null
+  console.log("Not Recording...")
 }
 
 function pauseWatch() {
@@ -98,9 +103,11 @@ function pauseWatch() {
   }
   if (durationIntervalID !== null) {
       clearInterval(durationIntervalID)
+      durationIntervalID = null
   }
   if (lastFixIntervalID !== null) {
       clearInterval(lastFixIntervalID)
+      lastFixIntervalID = null
   }
   geolocation.clearWatch(watchID)
   elapsedTimeBeforePaused += (Date.now() - startTime)
@@ -108,9 +115,11 @@ function pauseWatch() {
   engineState = States.PAUSED
   isWatching = false
   watchID = null
+  console.log("Paused...")
 }
 
 function resumeWatch() {
+  console.log("Resumed...")
   startWatch()
   durationIntervalID = setInterval(calculateDuration, 1000)
   lastFixIntervalID = setInterval(updateLastFix, 1000)
