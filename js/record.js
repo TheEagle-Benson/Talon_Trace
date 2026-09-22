@@ -12,6 +12,7 @@ let elapsedTimeBeforePaused = 0
 let totalElapsedTime = 0
 let durationIntervalID = null
 let lastFixIntervalID = null
+let durationSegmentsArray = null
 
 const States = Object.freeze({
   RECORDING: "RECORDING",
@@ -29,6 +30,16 @@ const recordDurationDisplay = document.querySelector("#recordDurationValue")
 const recordAccuracyDisplay = document.querySelector("#recordAccuracyValue")
 const recordLastFixDisplay = document.querySelector("#recordLastFix")
 const recordingStatus = document.querySelector("#recordStatusPill")
+const saveTrailModal = document.querySelector("#saveTrailModal")
+const saveTrailModalScrim = document.querySelector("#saveTrailModalScrim")
+const saveTrailForm = document.querySelector("#saveTrailForm")
+const trailNameInput = document.querySelector("#trailNameInput")
+const trailNotesInput = document.querySelector("#trailNotesInput")
+const cancelSaveTrailBtn = document.querySelector("#cancelSaveTrailBtn")
+const confirmSaveTrailBtn = document.querySelector("#confirmSaveTrailBtn")
+const discardTrailBtn = document.querySelector("#discardTrailBtn")
+const trailSummary = document.querySelector(".save-trail-modal__subtitle")
+
 
 let engineState = States.IDLE
 
@@ -74,22 +85,9 @@ function stopWatch() {
   if (engineState === States.IDLE) {
     return
   }
-  if (durationIntervalID !== null) {
-      clearInterval(durationIntervalID)
-      durationIntervalID = null
-  }
-  if (lastFixIntervalID !== null) {
-      clearInterval(lastFixIntervalID)
-      lastFixIntervalID = null
-  }
-  if (watchID) {
-    geolocation.clearWatch(watchID)
-  }
   endTime = Date.now()
-  engineState = States.IDLE
-  isWatching = false
-  watchID = null
-  console.log("Not Recording...")
+  trailSummary.textContent = `${(calculateTotalDistance(filteredCoords) / 1000).toFixed(2)}km . ${filteredCoords.length} points . ${durationSegmentsArray[0]}h ${durationSegmentsArray[1]}m ${durationSegmentsArray[2]}s`
+  openModal()
 }
 
 function pauseWatch() {
@@ -111,7 +109,6 @@ function pauseWatch() {
   }
   geolocation.clearWatch(watchID)
   elapsedTimeBeforePaused += (Date.now() - startTime)
-  startTime = 0
   engineState = States.PAUSED
   isWatching = false
   watchID = null
@@ -181,7 +178,7 @@ function updateUI() {
 }
 
 function calculateDuration() {
-  let durationSegmentsArray = calculateTotalElapsedTime(elapsedTimeBeforePaused,startTime, Date.now())
+  durationSegmentsArray = calculateTotalElapsedTime(elapsedTimeBeforePaused,startTime, Date.now())
   let duration = formatTime(durationSegmentsArray)
   recordDurationDisplay.textContent = duration
 }
@@ -189,6 +186,37 @@ function calculateDuration() {
 function updateLastFix() {
   let lastFix = calculateLastFix()
   recordLastFixDisplay.textContent = `Last fix ${lastFix}s ago`
+}
+
+function openModal() {
+  if (saveTrailModalScrim) { saveTrailModalScrim.classList.add('is-open')
+  }
+  
+  if (saveTrailModal) { saveTrailModal.classList.add('is-open')
+  }
+}
+
+function closeModal() {
+  if (saveTrailModalScrim) { saveTrailModalScrim.classList.remove('is-open')
+  }
+  
+  if (saveTrailModal) { saveTrailModal.classList.remove('is-open')
+  }
+}
+
+function createObject() {
+  totalDistanceInMeters = calculateTotalDistance(filteredCoords)
+  totalElapsedTime = calculateTotalElapsedTime(elapsedTimeBeforePaused, startTime, endTime)
+  
+  return {
+    start_time: startTime,
+    end_time: endTime,
+    total_distance: totalDistanceInMeters,
+    point_count: filteredCoords.length,
+    created_at: Date.now(),
+    coords: filteredCoords
+  }
+
 }
 
 updateUi(updateUI)
@@ -208,9 +236,12 @@ startTrailBtn.addEventListener("click", (event) => {
 
 endTrailBtn.addEventListener("click", (event) => {
   stopWatch()
-  recordSheet.setAttribute("data-state", engineState.toLowerCase())
-  recordingStatus.classList.remove("is-live")
-  recordingStatus.innerHTML = '<span class="record-status__dot"></span> Not Recording'
+   if (engineState === States.RECORDING) {
+   pauseWatch()
+   recordSheet.setAttribute("data-state", engineState.toLowerCase())
+   recordingStatus.classList.remove("is-live")
+   recordingStatus.innerHTML = '<span class="record-status__dot"></span> Paused'
+ }
 })
 
 pauseResumeBtn.addEventListener("click", (event) => {
@@ -223,9 +254,66 @@ pauseResumeBtn.addEventListener("click", (event) => {
   }
   if (engineState === States.RECORDING) {
     pauseWatch()
+    startTime = 0
     recordSheet.setAttribute("data-state", engineState.toLowerCase())
     recordingStatus.classList.remove("is-live")
   recordingStatus.innerHTML = '<span class="record-status__dot"></span> Paused'
     return 
   }
+})
+
+confirmSaveTrailBtn.addEventListener("click", (event) => {
+  let geolocation = navigator.geolocation
+  if (!geolocation) {
+    console.warn('Your browser does not support geolocation.')
+    return
+  }
+  event.preventDefault()
+  let trailName = trailNameInput.value.trim()
+  let trailNotes = trailNotesInput.value.trim() || " "
+  
+  if (!trailName) {
+    console.log("Name field cannot be empty")
+    // error toast would be implemented later
+   
+    closeModal()
+    return
+  }
+  let trailObjectDb = createObject()
+  trailObjectDb.name = trailName
+  trailObjectDb.notes = trailNotes
+  trailNameInput.value = ""
+  trailNotesInput.value = ""
+
+  
+  if (durationIntervalID !== null) {
+      clearInterval(durationIntervalID)
+      durationIntervalID = null
+    }
+  if (lastFixIntervalID !== null) {
+    clearInterval(lastFixIntervalID)
+    lastFixIntervalID = null
+  }
+  if (watchID) {
+    geolocation.clearWatch(watchID)
+  }
+  engineState = States.IDLE
+  isWatching = false
+  watchID = null
+  recordSheet.setAttribute("data-state", engineState.toLowerCase())
+  recordingStatus.classList.remove("is-live")
+  recordingStatus.innerHTML = '<span class="record-status__dot"></span> Not Recording'
+  console.log("Not Recording...")
+  console.log(trailObjectDb)
+  
+  closeModal()
+  console.log("confirm save trail button clicked")
+})
+
+cancelSaveTrailBtn.addEventListener("click", (event) => {
+  console.log("cancel save trail button clicked")
+})
+
+discardTrailBtn.addEventListener("click", (event) => {
+  console.log("discard trail button clicked")
 })
