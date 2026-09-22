@@ -311,7 +311,7 @@ confirmSaveTrailBtn.addEventListener("click", (event) => {
 })
 
 cancelSaveTrailBtn.addEventListener("click", (event) => {
-  console.log("cancel save trail button clicked")
+  closeModal()
 })
 
 discardTrailBtn.addEventListener("click", (event) => {
