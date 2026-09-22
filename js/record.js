@@ -60,17 +60,7 @@ function startWatch() {
 }
 
 function startNewTrail() {
-  elapsedTimeBeforePaused = 0
-  totalElapsedTime = 0
-  totalDistanceInMeters = 0
-  startTime = 0
-  endTime = 0
-  filteredCoords.length = 0
-  recordedPointsDisplay.textContent = 0
-  recordLastFixDisplay.textContent = `Last fix 0s ago`
-  recordDurationDisplay.textContent = '00:00:00'
-  recordAccuracyDisplay.textContent = '0m'
-  distanceValueDisplay.innerHTML = `0<span class="unit">km</span>`
+  restDefault()
   startWatch()
   durationIntervalID = setInterval(calculateDuration, 1000)
   lastFixIntervalID = setInterval(updateLastFix, 1000)
@@ -219,6 +209,20 @@ function createObject() {
 
 }
 
+function restDefault() {
+  elapsedTimeBeforePaused = 0
+  totalElapsedTime = 0
+  totalDistanceInMeters = 0
+  startTime = 0
+  endTime = 0
+  filteredCoords.length = 0
+  recordedPointsDisplay.textContent = 0
+  recordLastFixDisplay.textContent = `Last fix 0s ago`
+  recordDurationDisplay.textContent = '00:00:00'
+  recordAccuracyDisplay.textContent = '0m'
+  distanceValueDisplay.innerHTML = `0<span class="unit">km</span>`
+}
+
 updateUi(updateUI)
 
 startTrailBtn.addEventListener("click", (event) => {
@@ -315,5 +319,22 @@ cancelSaveTrailBtn.addEventListener("click", (event) => {
 })
 
 discardTrailBtn.addEventListener("click", (event) => {
-  console.log("discard trail button clicked")
+  if (durationIntervalID !== null) {
+    clearInterval(durationIntervalID)
+    durationIntervalID = null
+  }
+
+  if (lastFixIntervalID !== null) {
+    clearInterval(lastFixIntervalID)
+    lastFixIntervalID = null
+  }
+  restDefault()
+  engineState = States.IDLE
+  isWatching = false
+  watchID = null
+  recordSheet.setAttribute("data-state", engineState.toLowerCase())
+  recordingStatus.classList.remove("is-live")
+  recordingStatus.innerHTML = '<span class="record-status__dot"></span> Not Recording'
+  closeModal()
+  console.log("Not Recording...")
 })
