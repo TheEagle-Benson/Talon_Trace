@@ -32,3 +32,11 @@ export function calculateTotalElapsedTime(elapsedTimeBeforePaused, startTime, en
 export function formatTime(timeArray) {
   return timeArray.map(v =>String(v).padStart(2, '0')).join(':')
 }
+
+export function notify(message, className = "") {
+  Toastify({
+    text: message,
+    position: "center",
+    className: className
+  }).showToast()
+}

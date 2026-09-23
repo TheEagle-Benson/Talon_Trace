@@ -1,5 +1,5 @@
 import {geo_optional_args, success_callback, error_callback, matrixList, filteredCoords, updateTrailsCallback, updateUi } from './gps.js';
-import { calculateTotalDistance, calculateTotalElapsedTime, formatTime } from './utils.js';
+import { calculateTotalDistance, calculateTotalElapsedTime, formatTime, notify } from './utils.js';
 import { saveTrail } from './db.js';
 
 let watchID = null
@@ -57,6 +57,7 @@ function startWatch() {
    startTime = Date.now()
    engineState = States.RECORDING
    isWatching = true
+   notify("Recording Engine Started!", "toast-info")
    console.log("Recording...")
 }
 
@@ -279,8 +280,7 @@ confirmSaveTrailBtn.addEventListener("click", async (event) => {
   
   if (!trailName) {
     console.log("Name field cannot be empty")
-    // error toast would be implemented later
-   
+    notify("Enter the name to save trail with!", "toast-error")
     closeModal()
     return
   }
@@ -291,6 +291,16 @@ confirmSaveTrailBtn.addEventListener("click", async (event) => {
   trailNotesInput.value = ""
 
   let returnValue = await saveTrail(trailObjectDb)
+  if (returnValue.status === "success") {
+    notify(returnValue.message, "toast-success")
+  }
+  
+  if (returnValue.status === "errror") {
+    notify(returnValue.message, "toast-error")
+    closeModal()
+    return 
+  }
+  
   console.log(returnValue)
   if (durationIntervalID !== null) {
       clearInterval(durationIntervalID)
@@ -313,7 +323,6 @@ confirmSaveTrailBtn.addEventListener("click", async (event) => {
   console.log(trailObjectDb)
   
   closeModal()
-  console.log("confirm save trail button clicked")
 })
 
 cancelSaveTrailBtn.addEventListener("click", (event) => {

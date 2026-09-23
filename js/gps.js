@@ -1,3 +1,4 @@
+import { notify } from './utils.js';
 let user_error_str
 let coordsUpdate
 let uiUpdate
@@ -24,20 +25,25 @@ export function error_callback(error) {
     case 1:
       console.warn("User denied location access")
       user_error_str = "You denied location access. Kindly allow location for this site."
+      notify(user_error_str, "toast-error")
       break;
       case 2:
         console.warn("location information is not available")
         user_error_str = "Could not get your location information."
+        notify(user_error_str, "toast-info")
         break;
       case 3:
         console.warn("Request timeout")
         user_error_str = `Request timeout. Could not resolve your location within ${geo_optional_args.timeout / 60000} minutes`
+        notify(user_error_str, "toast-info")
         console.log(user_error_str)
         break;
       
     default:
       console.error("An unknown error occured", error.message)
       user_error_str = "An unknown error occurred"
+      notify(user_error_str, "toast-error")
+      console.log(user_error_str)
   }
 }
 
