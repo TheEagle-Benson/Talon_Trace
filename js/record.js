@@ -1,5 +1,6 @@
 import {geo_optional_args, success_callback, error_callback, matrixList, filteredCoords, updateTrailsCallback, updateUi } from './gps.js';
 import { calculateTotalDistance, calculateTotalElapsedTime, formatTime } from './utils.js';
+import { saveTrail } from './db.js';
 
 let watchID = null
 let isWatching = false
@@ -266,7 +267,7 @@ pauseResumeBtn.addEventListener("click", (event) => {
   }
 })
 
-confirmSaveTrailBtn.addEventListener("click", (event) => {
+confirmSaveTrailBtn.addEventListener("click", async (event) => {
   let geolocation = navigator.geolocation
   if (!geolocation) {
     console.warn('Your browser does not support geolocation.')
@@ -289,7 +290,8 @@ confirmSaveTrailBtn.addEventListener("click", (event) => {
   trailNameInput.value = ""
   trailNotesInput.value = ""
 
-  
+  let returnValue = await saveTrail(trailObjectDb)
+  console.log(returnValue)
   if (durationIntervalID !== null) {
       clearInterval(durationIntervalID)
       durationIntervalID = null
