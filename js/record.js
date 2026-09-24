@@ -7,6 +7,7 @@ let isWatching = false
 let map
 let trail
 let totalDistanceInMeters = 0
+let trailStartTime = 0
 let startTime = 0
 let endTime = 0
 let elapsedTimeBeforePaused = 0
@@ -54,7 +55,8 @@ function startWatch() {
     return
   }
    watchID = geolocation.watchPosition(success_callback, error_callback, geo_optional_args)
-   startTime = Date.now()
+   trailStartTime = Date.now()
+   startTime = trailStartTime
    engineState = States.RECORDING
    isWatching = true
    notify("Recording Engine Started!", "toast-info")
@@ -201,7 +203,7 @@ function createObject() {
   totalElapsedTime = calculateTotalElapsedTime(elapsedTimeBeforePaused, startTime, endTime)
   
   return {
-    start_time: startTime,
+    start_time: trailStartTime,
     end_time: endTime,
     total_distance: totalDistanceInMeters,
     point_count: filteredCoords.length,
@@ -215,7 +217,7 @@ function restDefault() {
   elapsedTimeBeforePaused = 0
   totalElapsedTime = 0
   totalDistanceInMeters = 0
-  startTime = 0
+  trailStartTime = 0
   endTime = 0
   filteredCoords.length = 0
   recordedPointsDisplay.textContent = 0
