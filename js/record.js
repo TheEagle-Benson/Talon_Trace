@@ -1,4 +1,4 @@
-import {geo_optional_args, success_callback, error_callback, matrixList, filteredCoords, updateTrailsCallback, updateUi } from './gps.js';
+import {geo_optional_args, success_callback, error_callback, matrixList, filteredCoords, updateTrailsCallback, updateUi, updateGpsReady } from './gps.js';
 import { calculateTotalDistance, calculateTotalElapsedTime, formatTime, notify } from './utils.js';
 import { saveTrail } from './db.js';
 
@@ -55,19 +55,11 @@ function startWatch() {
     return
   }
    watchID = geolocation.watchPosition(success_callback, error_callback, geo_optional_args)
-   trailStartTime = Date.now()
-   startTime = trailStartTime
-   engineState = States.RECORDING
-   isWatching = true
-   notify("Recording Engine Started!", "toast-info")
-   console.log("Recording...")
 }
 
 function startNewTrail() {
   restDefault()
   startWatch()
-  durationIntervalID = setInterval(calculateDuration, 1000)
-  lastFixIntervalID = setInterval(updateLastFix, 1000)
 }
 
 function stopWatch() {
@@ -111,6 +103,9 @@ function pauseWatch() {
 
 function resumeWatch() {
   console.log("Resumed...")
+  startTime = Date.now()
+  engineState = States.RECORDING
+  isWatching = true
   startWatch()
   durationIntervalID = setInterval(calculateDuration, 1000)
   lastFixIntervalID = setInterval(updateLastFix, 1000)
@@ -227,6 +222,24 @@ function restDefault() {
   distanceValueDisplay.innerHTML = `0<span class="unit">km</span>`
 }
 
+function checkGpsReady(gpsReadyState) {
+  if (gpsReadyState && engineState === States.IDLE) {
+    trailStartTime = Date.now()
+   startTime = trailStartTime
+   engineState = States.RECORDING
+   isWatching = true
+   notify("Recording Engine Started!", "toast-info")
+   recordSheet.setAttribute("data-state", engineState.toLowerCase())
+  recordingStatus.classList.add("is-live")
+  recordingStatus.innerHTML = '<span class="record-status__dot"></span> Recording'
+   console.log("Recording...")
+   durationIntervalID = setInterval(calculateDuration, 1000)
+  lastFixIntervalID = setInterval(updateLastFix, 1000)
+  }
+  return 
+}
+
+updateGpsReady(checkGpsReady)
 updateUi(updateUI)
 
 startTrailBtn.addEventListener("click", (event) => {
@@ -236,10 +249,6 @@ startTrailBtn.addEventListener("click", (event) => {
   updateTrailsCallback(updateTrail)
   plotCoords()
   startNewTrail()
-  recordSheet.setAttribute("data-state", engineState.toLowerCase())
-  recordingStatus.classList.add("is-live")
-  recordingStatus.innerHTML = '<span class="record-status__dot"></span> Recording'
-  
 })
 
 endTrailBtn.addEventListener("click", (event) => {

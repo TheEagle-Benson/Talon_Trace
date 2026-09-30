@@ -2,6 +2,8 @@ import { notify } from './utils.js';
 let user_error_str
 let coordsUpdate
 let uiUpdate
+let gpsReadyUpdate
+export let gpsReady = false 
 export let matrixList = []
 const MAX_ACCURACY = 20
 const MIN_DISTANCE = 5
@@ -99,6 +101,11 @@ export function haversineDistance(point1, point2) {
 function filterCoords(coords) {
   if (filteredCoords.length === 0) {
     filteredCoords.push(coords)
+    gpsReady = true
+    if (typeof gpsReadyUpdate === 'function') {
+      gpsReadyUpdate(gpsReady)
+    }
+    
     if (typeof uiUpdate === 'function') {
            uiUpdate()
          }
@@ -136,4 +143,8 @@ export function updateTrailsCallback(callbackFunc) {
 
 export function updateUi(callbackFunc) {
   uiUpdate = callbackFunc
+}
+
+export function updateGpsReady(callbackFunc) {
+  gpsReadyUpdate = callbackFunc
 }
