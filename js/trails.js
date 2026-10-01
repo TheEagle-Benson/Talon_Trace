@@ -1,6 +1,8 @@
 import { getAllTrails } from './db.js';
 
+const trailsObject = await getAllTrails()
 let trailListContainer = document.querySelector("#trailListContainer")
+let emptyState = document.querySelector("#trailsEmptyState")
 
 function createButtonCard(trailTitle, trailDistance, numberOfPoints, trailDate, trailID) {
   let buttonCard = `<button class="trail-card" data-trail-id=${trailID}>
@@ -15,3 +17,45 @@ function createButtonCard(trailTitle, trailDistance, numberOfPoints, trailDate, 
       </button>`
       return buttonCard
 }
+
+
+function getAllTrailsFromDb() {
+  if (trailsObject.status !== "success") {
+    console.log(trailsObject.message)
+    return
+  }
+  
+  if (trailsObject.trail.length === 0) {
+    emptyState.style.display = "flex"
+    return
+  }
+  
+  let trailArray = trailsObject.trail
+  trailArray.forEach(trail => {
+    let title = trail.name
+    let distance = trail.total_distance
+    let id = trail.id
+    let pointCount = trail.point_count
+    let date = calculateDateAndFormat(trail.created_at)
+    
+    let buttonCard = createButtonCard(title, distance, pointCount, date, id)
+    trailListContainer.insertAdjacentHTML('beforeend', buttonCard)
+  })
+}
+
+function calculateDateAndFormat(timestamp) {
+  const months = [
+    "January", "February", "March",
+    "April", "May", "June",
+    "July", "August", "September",
+    "October", "November", "December"
+  ]
+  
+  let date = new Date(timestamp)
+  let day = date.getDate()
+  let month = months[date.getMonth()]
+  let year = date.getFullYear()
+  return `${month} ${day}, ${year}`
+}
+
+getAllTrailsFromDb()
