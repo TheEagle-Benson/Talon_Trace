@@ -58,4 +58,18 @@ function calculateDateAndFormat(timestamp) {
   return `${month} ${day}, ${year}`
 }
 
+function openTrailDetail(event) {
+  let trailId = event.target.closest(".trail-card").getAttribute("data-trail-id")
+  if (!trailId) {
+    console.log("trail id does not exist!")
+  return
+  }
+  window.location.href = `trail-detail.html?trailid=${trailId}`
+}
+
+
+trailListContainer.addEventListener("click", (event) => {
+  openTrailDetail(event)
+})
+
 getAllTrailsFromDb()
