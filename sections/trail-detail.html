@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Talon Trace | Trail Details</title>
+    <link rel="stylesheet" href="../css/toastify.css" />
     <link rel="stylesheet" href="../css/style.css" />
   </head>
   <body>
@@ -250,6 +251,96 @@
           </div>
         </div>
       </section>
+
+
+      <!-- ==================== EDIT TRAIL MODAL / SHEET ====================
+     Opened by #detailNotesEditBtn. UI ONLY — no save logic.
+     JS toggles `.is-open` on #editTrailModal / #editTrailModalScrim,
+     pre-fills #editTrailNameInput / #editTrailNotesInput with current
+     values, and wires #cancelEditTrailBtn / #confirmEditTrailBtn.
+     ==================================================================== -->
+<div class="modal-scrim" id="editTrailModalScrim"></div>
+<div class="save-trail-modal" id="editTrailModal" role="dialog" aria-modal="true" aria-labelledby="editTrailModalTitle">
+  <div class="save-trail-modal__handle"></div>
+
+  <div class="save-trail-modal__header">
+    <span class="save-trail-modal__icon">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <div>
+      <h2 class="save-trail-modal__title" id="editTrailModalTitle">Edit Trail</h2>
+      <p class="save-trail-modal__subtitle">Update the name or notes for this trail</p>
+    </div>
+  </div>
+
+  <form class="save-trail-modal__form" id="editTrailForm">
+    <div class="form-field">
+      <label class="form-field__label" for="editTrailNameInput">
+        Trail Name <span class="form-field__required">*</span>
+      </label>
+      <input
+        type="text"
+        id="editTrailNameInput"
+        name="trailName"
+        class="form-field__input"
+        placeholder="e.g. Dad's Place Trail"
+        required
+        autocomplete="off"
+      >
+    </div>
+
+    <div class="form-field">
+      <label class="form-field__label" for="editTrailNotesInput">
+        Notes <span class="form-field__optional">(optional)</span>
+      </label>
+      <textarea
+        id="editTrailNotesInput"
+        name="trailNotes"
+        class="form-field__textarea"
+        placeholder="Landmarks, directions, anything worth remembering…"
+        rows="3"
+      ></textarea>
+    </div>
+
+    <div class="save-trail-modal__actions">
+      <button type="button" class="btn btn--secondary" id="cancelEditTrailBtn">
+        Cancel
+      </button>
+      <button type="submit" class="btn btn--primary" id="confirmEditTrailBtn">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Save Changes
+      </button>
+    </div>
+  </form>
+</div>
+
+
+<!-- ==================== DELETE TRAIL CONFIRMATION MODAL ====================
+     Opened by #deleteTrailBtn. UI ONLY — no delete logic.
+     JS toggles `.is-open` on #deleteTrailModal / #deleteTrailModalScrim,
+     and wires #cancelDeleteTrailBtn / #confirmDeleteTrailBtn.
+     ==================================================================== -->
+<div class="modal-scrim" id="deleteTrailModalScrim"></div>
+<div class="confirm-modal" id="deleteTrailModal" role="alertdialog" aria-modal="true" aria-labelledby="deleteTrailModalTitle">
+  <span class="confirm-modal__icon">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 9v4M12 17h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M10.3 3.9L2.5 17a2 2 0 001.7 3h15.6a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+  </span>
+
+  <h2 class="confirm-modal__title" id="deleteTrailModalTitle">Delete this trail?</h2>
+  <p class="confirm-modal__body">
+    <span id="deleteTrailModalName">Dad's Place Trail</span> and all its recorded points will be permanently removed. This can't be undone.
+  </p>
+
+  <div class="confirm-modal__actions">
+    <button type="button" class="btn btn--secondary" id="cancelDeleteTrailBtn">
+      Cancel
+    </button>
+    <button type="button" class="btn btn--danger" id="confirmDeleteTrailBtn">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-8 0l1 13h8l1-13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Delete Trail
+    </button>
+  </div>
+</div>
       <!-- ==================== BOTTOM NAVIGATION ==================== -->
       <nav class="bottom-nav" aria-label="Primary">
         <a
@@ -363,6 +454,8 @@
         </a>
       </nav>
     </div>
+    <script type="text/javascript" charset="utf-8" src="../js/toastify.js"></script>
+    <script type="module" charset="utf-8" src="../js/utils.js"></script>
     <script type="module" charset="utf-8" src="../libs/dexie.js"></script>
     <script type="module" charset="utf-8" src="../js/trail-details.js"></script>
   </body>

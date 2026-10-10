@@ -96,3 +96,10 @@ export async function deleteTrail(id) {
     }
   }
 }
+
+export async function checkIfExist(nameValue, currentID) {
+  const item = await db.trail.where('name').equals(nameValue).first();
+  const exists = item && item.id !== currentID
+  console.log("Name already exist: ", Boolean(exists))
+  return Boolean(exists);
+}
