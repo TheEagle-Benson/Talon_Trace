@@ -2321,3 +2321,50 @@ svg {
   gap: 10px;
 }
 .confirm-modal__actions .btn{ flex: 1; }
+
+/* ==========================================================================
+   RECENT TRAILS — EMPTY STATE (Home screen)
+   Smaller, quieter version of the full .empty-state used on My Trails —
+   this one sits inline within the Recent Trails section, not full-screen.
+   ========================================================================== */
+.recent-empty{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 34px 24px;
+  margin: 0 var(--gutter);
+  background: var(--ink-850, var(--ink-800));
+  border: 1px dashed var(--ink-600);
+  border-radius: var(--radius-md);
+}
+.recent-empty__icon{
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: var(--ink-800);
+  border: 1px solid var(--ink-700);
+  color: var(--fog-500);
+  display: flex; align-items: center; justify-content: center;
+}
+.recent-empty__icon svg{ width: 19px; height: 19px; }
+.recent-empty__title{
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--paper-100);
+}
+.recent-empty__text{
+  font-size: 12.5px;
+  color: var(--fog-500);
+  line-height: 1.5;
+  max-width: 220px;
+}
+.recent-empty__cta{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--brass-400);
+}
