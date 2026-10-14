@@ -2368,3 +2368,14 @@ svg {
   font-weight: 700;
   color: var(--brass-400);
 }
+
+
+.gps-pill.is-unavailable{
+  color: var(--red-500);
+  background: rgba(225,91,77,0.10);
+  border-color: rgba(225,91,77,0.28);
+}
+.gps-pill.is-unavailable .gps-pill__dot{
+  background: var(--red-500);
+  animation: none; /* stop the pulse — nothing is actively happening */
+}

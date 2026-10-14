@@ -21,7 +21,6 @@ async function displayStat() {
   if (res.status === 'error') {
     console.log('an error occurred on the home page')
     seeAllLink.style.display = 'none'
-    emptyState.style.display = 'flex'
     notify('An Unknown Error Occurred. Refresh The Page And Try Again', 'toast-error')
     return 
   }
@@ -100,7 +99,45 @@ function openTrailDetail(event) {
   window.location.href = `trail-detail.html?trailid=${trailId}`
 }
 
+function gpsStatus() {
+  gpsStatusIndicator.className = "gps-pill is-searching"
+  gpsStatusIndicator.innerHTML =
+  '<span class="gps-pill__dot"></span>Acquiring GPS'
+  let geolocation = navigator.geolocation
+  if (!geolocation) {
+    gpsStatusIndicator.className = "gps-pill is-unavailable"
+    gpsStatusIndicator.innerHTML = '<span class="gps-pill__dot"></span>No GPS Access'
+    return 
+  }
+  geolocation.getCurrentPosition((pos)=> {
+    const accuracy = pos.coords.accuracy
+    gpsStatusIndicator.className = "gps-pill"
+    let label = accuracy <= 20 ? "GPS Ready" : "Weak GPS Signal"
+    gpsStatusIndicator.innerHTML = `<span class="gps-pill__dot"></span>${label}`
+  }, (err) => {
+    gpsStatusIndicator.className = "gps-pill is-unavailable"
+    let label = null 
+    if (err.code === 1) {
+        label = "Location Denied"
+    } else if (err.code === 2) {
+        label = "GPS Unavailable"
+    } else {
+      label = "GPS Timeout"
+    }
+        gpsStatusIndicator.innerHTML = `<span class="gps-pill__dot"></span>${label}`
+  },
+  {
+            enableHighAccuracy: true,
+            timeout: 8000,       // give up after 8s, don't hang forever
+            maximumAge: 0  
+  })
+}
+
+gpsStatus()
 displayStat()
+setInterval(() => {
+  gpsStatus()
+}, 10000)
 
 
 recentTrailListContainer.addEventListener('click', (event) => {
