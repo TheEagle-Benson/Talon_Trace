@@ -114,6 +114,25 @@ function getRecentTrails() {
     })
 }
 
+function getFavoriteTrails() {
+  let sortedTrails = [...trailsObject.trail].filter(trail => {
+    return trail.is_favorite === true
+  })
+  console.log(sortedTrails)
+
+    trailListContainer.innerHTML = ""
+    sortedTrails.forEach(trail => {
+      let title = trail.name
+      let distance = trail.total_distance
+      let id = trail.id
+      let pointCount = trail.point_count
+      let date = calculateDateAndFormat(trail.created_at)
+      
+      let buttonCard = createButtonCard(title, distance, pointCount, date, id)
+      trailListContainer.insertAdjacentHTML('beforeend', buttonCard)
+    })
+}
+
 getAllTrailsFromDb()
 
 
@@ -151,4 +170,6 @@ longestFilter.addEventListener('click', () => {
   getLongestTrails()
 })
 
-
+favoriteFilter.addEventListener('click', () => {
+  getFavoriteTrails()
+})
