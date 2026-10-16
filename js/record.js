@@ -202,6 +202,7 @@ function createObject() {
     end_time: endTime,
     total_distance: totalDistanceInMeters,
     point_count: filteredCoords.length,
+    is_favorite: false,
     created_at: Date.now(),
     coords: filteredCoords
   }
