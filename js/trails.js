@@ -1,8 +1,18 @@
 import { getAllTrails } from './db.js';
 
 const trailsObject = await getAllTrails()
+
+
+const allFilter = document.querySelector('#all_filter')
+const recentFilter = document.querySelector('#recent_filter')
+const longestFilter = document.querySelector('#longest_filter')
+const favoriteFilter = document.querySelector('#favorites_filter')
+const filterChips = document.querySelector('.filter-chips')
+
+let activeFilter = "all"
 let trailListContainer = document.querySelector("#trailListContainer")
 let emptyState = document.querySelector("#trailsEmptyState")
+
 
 function createButtonCard(trailTitle, trailDistance, numberOfPoints, trailDate, trailID) {
   let buttonCard = `<button class="trail-card" data-trail-id=${trailID}>
@@ -29,7 +39,8 @@ function getAllTrailsFromDb() {
     emptyState.style.display = "flex"
     return
   }
-  
+
+  trailListContainer.innerHTML = ""
   let trailArray = trailsObject.trail
   trailArray.forEach(trail => {
     let title = trail.name
@@ -67,9 +78,77 @@ function openTrailDetail(event) {
   window.location.href = `trail-detail.html?trailid=${trailId}`
 }
 
+function getLongestTrails() {
+    let sortedTrails = [...trailsObject.trail].sort((a,b) => {
+        return b.total_distance - a.total_distance
+    })
+
+    trailListContainer.innerHTML = ""
+    sortedTrails.forEach(trail => {
+      let title = trail.name
+      let distance = trail.total_distance
+      let id = trail.id
+      let pointCount = trail.point_count
+      let date = calculateDateAndFormat(trail.created_at)
+      
+      let buttonCard = createButtonCard(title, distance, pointCount, date, id)
+      trailListContainer.insertAdjacentHTML('beforeend', buttonCard)
+    })
+}
+
+function getRecentTrails() {
+    let sortedTrails = [...trailsObject.trail].sort((a,b) => {
+        return b.created_at - a.created_at
+    })
+
+    trailListContainer.innerHTML = ""
+    sortedTrails.forEach(trail => {
+      let title = trail.name
+      let distance = trail.total_distance
+      let id = trail.id
+      let pointCount = trail.point_count
+      let date = calculateDateAndFormat(trail.created_at)
+      
+      let buttonCard = createButtonCard(title, distance, pointCount, date, id)
+      trailListContainer.insertAdjacentHTML('beforeend', buttonCard)
+    })
+}
+
+getAllTrailsFromDb()
+
 
 trailListContainer.addEventListener("click", (event) => {
   openTrailDetail(event)
 })
 
-getAllTrailsFromDb()
+filterChips.addEventListener('click', (event) => {
+  let element = event.target.closest('.filter-chip')
+  if (!element) {
+    return 
+  }
+  let activated = filterChips.getElementsByClassName('filter-chip is-selected')[0]
+  if (element.getAttribute('id') === activated.getAttribute('id')) {
+    console.log('Same element clicked')
+    return
+  }
+  activated.classList.remove('is-selected')
+  console.log(activated)
+  activeFilter = element.getAttribute('data-filter')
+  element.classList.add('is-selected')
+})
+
+allFilter.addEventListener('click', () => {
+  getAllTrailsFromDb()
+
+})
+
+recentFilter.addEventListener('click', () => {
+    getRecentTrails()
+
+})
+
+longestFilter.addEventListener('click', () => {
+  getLongestTrails()
+})
+
+
