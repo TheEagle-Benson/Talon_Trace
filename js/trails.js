@@ -9,7 +9,6 @@ const longestFilter = document.querySelector('#longest_filter')
 const favoriteFilter = document.querySelector('#favorites_filter')
 const filterChips = document.querySelector('.filter-chips')
 
-let activeFilter = "all"
 let trailListContainer = document.querySelector("#trailListContainer")
 let emptyState = document.querySelector("#trailsEmptyState")
 
@@ -30,6 +29,8 @@ function createButtonCard(trailTitle, trailDistance, numberOfPoints, trailDate, 
 
 
 function getAllTrailsFromDb() {
+    hideAllEmptyStates()
+    trailListContainer.innerHTML = ""
   if (trailsObject.status !== "success") {
     console.log(trailsObject.message)
     return
@@ -40,7 +41,6 @@ function getAllTrailsFromDb() {
     return
   }
 
-  trailListContainer.innerHTML = ""
   let trailArray = trailsObject.trail
   trailArray.forEach(trail => {
     let title = trail.name
@@ -79,11 +79,22 @@ function openTrailDetail(event) {
 }
 
 function getLongestTrails() {
+    hideAllEmptyStates()
+    trailListContainer.innerHTML = ""
+    if (trailsObject.status !== "success") {
+    console.log(trailsObject.message)
+    return
+  }
     let sortedTrails = [...trailsObject.trail].sort((a,b) => {
         return b.total_distance - a.total_distance
     })
 
-    trailListContainer.innerHTML = ""
+    if (sortedTrails.length === 0) {
+     trailListContainer.innerHTML = ""
+    document.querySelector('#longestFilterEmptyState').style.display = "flex"
+    return
+    }
+
     sortedTrails.forEach(trail => {
       let title = trail.name
       let distance = trail.total_distance
@@ -97,11 +108,22 @@ function getLongestTrails() {
 }
 
 function getRecentTrails() {
+    hideAllEmptyStates()
+    trailListContainer.innerHTML = ""
+   if (trailsObject.status !== "success") {
+    console.log(trailsObject.message)
+    return
+  }
     let sortedTrails = [...trailsObject.trail].sort((a,b) => {
         return b.created_at - a.created_at
     })
 
-    trailListContainer.innerHTML = ""
+    if (sortedTrails.length === 0) {
+     trailListContainer.innerHTML = ""
+    document.querySelector('#recentFilterEmptyState').style.display = "flex"
+    return
+    }
+
     sortedTrails.forEach(trail => {
       let title = trail.name
       let distance = trail.total_distance
@@ -115,13 +137,23 @@ function getRecentTrails() {
 }
 
 function getFavoriteTrails() {
-  let sortedTrails = [...trailsObject.trail].filter(trail => {
+  hideAllEmptyStates()
+  trailListContainer.innerHTML = ""
+   if (trailsObject.status !== "success") {
+    console.log(trailsObject.message)
+    return
+  }
+  let trails = [...trailsObject.trail].filter(trail => {
     return trail.is_favorite === true
   })
-  console.log(sortedTrails)
 
-    trailListContainer.innerHTML = ""
-    sortedTrails.forEach(trail => {
+   if (trails.length === 0) {
+     trailListContainer.innerHTML = ""
+    document.querySelector('#favoritesFilterEmptyState').style.display = "flex"
+    return
+    }
+
+    trails.forEach(trail => {
       let title = trail.name
       let distance = trail.total_distance
       let id = trail.id
@@ -131,6 +163,14 @@ function getFavoriteTrails() {
       let buttonCard = createButtonCard(title, distance, pointCount, date, id)
       trailListContainer.insertAdjacentHTML('beforeend', buttonCard)
     })
+}
+
+function hideAllEmptyStates() {
+  emptyState.style.display = "none";
+
+  document.querySelector('#recentFilterEmptyState').style.display = "none";
+  document.querySelector('#longestFilterEmptyState').style.display = "none";
+  document.querySelector('#favoritesFilterEmptyState').style.display = "none";
 }
 
 getAllTrailsFromDb()
@@ -152,7 +192,6 @@ filterChips.addEventListener('click', (event) => {
   }
   activated.classList.remove('is-selected')
   console.log(activated)
-  activeFilter = element.getAttribute('data-filter')
   element.classList.add('is-selected')
 })
 
@@ -172,4 +211,10 @@ longestFilter.addEventListener('click', () => {
 
 favoriteFilter.addEventListener('click', () => {
   getFavoriteTrails()
+})
+
+document.querySelector('#switch_to_all_trail').addEventListener('click', () => {
+  favoriteFilter.classList.remove('is-selected')
+  allFilter.classList.add('is-selected')
+  getAllTrailsFromDb()
 })

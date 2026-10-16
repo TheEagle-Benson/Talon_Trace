@@ -44,6 +44,35 @@
       <p>Trails you record will appear here, ready to view, follow again, or export.</p>
       <a href="record.html" class="btn btn--primary">Record New Trail</a>
     </div>
+    <!-- Empty state — Recent filter, no trails recorded in the recent window -->
+  <div class="empty-state" id="recentFilterEmptyState" style="display:none;">
+    <span class="empty-state__icon">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </span>
+    <h3>Nothing recent</h3>
+    <p>Trails you record will show up here right after you save them.</p>
+    <a href="record.html" class="btn btn--primary">Record New Trail<a/>
+  </div>
+  
+  <!-- Empty state — Longest filter, no trails recorded yet to rank -->
+  <div class="empty-state" id="longestFilterEmptyState" style="display:none;">
+    <span class="empty-state__icon">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 19 L9 10 L12 14 L16 6 L20 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <h3>No distance to rank yet</h3>
+    <p>Record a few trails and the longest ones will be sorted here first.</p>
+    <a href="record.html" class="btn btn--primary">Record New Trail<a/>
+  </div>
+  
+  <!-- Empty state — Favorites filter, trails exist but none marked favorite -->
+  <div class="empty-state" id="favoritesFilterEmptyState" style="display:none;">
+    <span class="empty-state__icon">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 17.3l-5.4 3.2 1.3-6.1L3 9.9l6.2-.6L12 3.5l2.8 5.8 6.2.6-4.9 4.5 1.3 6.1z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    </span>
+    <h3>No favorites yet</h3>
+    <p>Open a trail and tap the star to pin it here for quick access.</p>
+    <button class="btn btn--secondary" id="switch_to_all_trail">Browse All Trails</button>
+  </div>
 
     <div class="bottom-spacer"></div>
   </section>
