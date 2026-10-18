@@ -2379,3 +2379,183 @@ svg {
   background: var(--red-500);
   animation: none; /* stop the pulse — nothing is actively happening */
 }
+
+/* ==========================================================================
+   TRAIL SEARCH — input, clear button, and results dropdown
+   Matches Talon Trace dark theme. Structure/behavior per spec; colors use
+   existing design tokens (brass accent, dark slate surfaces).
+   ========================================================================== */
+.search-container{
+  position: relative;
+  margin: 4px var(--gutter) 6px;
+  flex: 0 0 auto;
+}
+
+.search-input-wrapper{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--ink-850, var(--ink-800));
+  border: 1px solid var(--ink-700);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  transition: border-color 0.15s var(--ease);
+}
+.search-input-wrapper:focus-within{
+  border-color: var(--brass-500);
+}
+
+.search-input__icon{
+  width: 18px; height: 18px;
+  color: var(--fog-500);
+  flex-shrink: 0;
+}
+
+.search-input{
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--paper-100);
+  font-size: 14.5px;
+  font-family: inherit;
+  min-width: 0;
+}
+.search-input::placeholder{ color: var(--fog-500); }
+
+.clear-search{
+  background: none;
+  border: none;
+  color: var(--fog-500);
+  width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.clear-search svg{ width: 15px; height: 15px; }
+.clear-search:hover{ color: var(--paper-100); }
+
+/* ---- Dropdown ---- */
+.search-dropdown{
+  position: absolute;
+  left: 0; right: 0; top: calc(100% + 8px);
+  background: var(--ink-900);
+  border: 1px solid var(--ink-700);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 14px 36px rgba(0,0,0,0.45);
+  z-index: 50;
+  overflow: hidden;
+  max-height: 360px;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-dropdown__header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--ink-800);
+  flex-shrink: 0;
+}
+.search-dropdown__count{
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--fog-400);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.search-dropdown__hint{
+  font-size: 10.5px;
+  color: var(--fog-500);
+}
+
+.search-result-list{
+  overflow-y: auto;
+  flex: 1;
+}
+
+.search-result-item{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--ink-800);
+  color: inherit;
+  text-align: left;
+}
+.search-result-item:last-child{ border-bottom: none; }
+.search-result-item:hover,
+.search-result-item.is-active{
+  background: var(--ink-850, var(--ink-800));
+}
+
+.search-result-item__thumb{
+  width: 38px; height: 38px;
+  border-radius: 8px;
+  background: linear-gradient(160deg, #1B2A26, #101A19);
+  border: 1px solid var(--ink-700);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.search-result-item__thumb svg{ width: 70%; height: 70%; }
+
+.search-result-item__body{
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.search-result-item__name{
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--paper-100);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.search-result-item__meta{
+  font-size: 11.5px;
+  color: var(--fog-500);
+  font-family: var(--font-mono);
+}
+.search-result-item__meta .sep{ color: var(--ink-600); margin: 0 2px; }
+
+.search-result-item__chevron{
+  color: var(--fog-500);
+  flex-shrink: 0;
+}
+
+/* ---- No results state ---- */
+.search-no-results{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 34px 20px;
+}
+.search-no-results__icon{
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--ink-850, var(--ink-800));
+  border: 1px solid var(--ink-700);
+  color: var(--fog-500);
+  display: flex; align-items: center; justify-content: center;
+}
+.search-no-results__icon svg{ width: 22px; height: 22px; }
+.search-no-results h3{
+  font-size: 15px;
+  color: var(--paper-100);
+}
+.search-no-results p{
+  font-size: 12.5px;
+  color: var(--fog-500);
+}
+
+/* ---- Utility ---- */
+.hidden{ display: none !important; }

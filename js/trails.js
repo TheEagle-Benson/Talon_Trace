@@ -9,6 +9,15 @@ const longestFilter = document.querySelector('#longest_filter')
 const favoriteFilter = document.querySelector('#favorites_filter')
 const filterChips = document.querySelector('.filter-chips')
 
+// Trail Search Elements
+const trailSearchInput = document.querySelector("#trail-search");
+const clearSearchBtn = document.querySelector("#clear-search");
+
+const searchResultsDropdown = document.querySelector("#search-results");
+const searchResultsCount = document.querySelector("#search-results-count");
+const searchResultsList = document.querySelector("#search-results-list");
+const searchNoResults = document.querySelector("#search-no-results");
+
 let trailListContainer = document.querySelector("#trailListContainer")
 let emptyState = document.querySelector("#trailsEmptyState")
 
@@ -173,6 +182,71 @@ function hideAllEmptyStates() {
   document.querySelector('#favoritesFilterEmptyState').style.display = "none";
 }
 
+function searchTrail() {
+  let matchedTrails = []
+  let searchTerm = trailSearchInput.value.trim().toLowerCase()
+  if (searchTerm) {
+    clearSearchBtn.classList.remove('hidden')
+    searchResultsDropdown.classList.remove('hidden')
+    searchNoResults.classList.add('hidden')
+  } else {
+    clearSearchBtn.classList.add('hidden')
+    searchResultsDropdown.classList.add('hidden')
+    searchNoResults.classList.add('hidden')
+    searchResultsList.innerHTML = ""
+    searchResultsCount.textContent = "Matching trails (0)"
+    return 
+  }
+
+  let trailsArray = [...trailsObject.trail]
+  trailsArray.forEach(trail => {
+    if (trail.name.toLowerCase().includes(searchTerm)) {
+      matchedTrails.push(trail)
+    }
+  })
+  searchResultsList.innerHTML = ""
+  searchResultsCount.textContent = `Matching trails (${matchedTrails.length})`
+  if (matchedTrails.length === 0) {
+    searchNoResults.classList.remove('hidden')
+  }
+  matchedTrails.forEach(trail => {
+    let buttonCard = createSearchTrailCard(trail.id, trail.name, trail.point_count, trail.created_at, trail.total_distance)
+    searchResultsList.insertAdjacentHTML('beforeend', buttonCard)
+  })
+  console.log(matchedTrails)
+}
+
+function createSearchTrailCard(trailId, trailName, pointCount, createdAt, trailDistance) {
+  let card = `
+    <button class="search-result-item" data-trail-id="${trailId}">
+  <span class="search-result-item__thumb">
+    <svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M6 32 L15 20 L13 12 L23 8 L28 3" stroke="#D9922E" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+  </span>
+  <span class="search-result-item__body">
+    <span class="search-result-item__name">${trailName}</span>
+    <span class="search-result-item__meta">${(trailDistance / 1000).toFixed(2)} km <span class="sep">·</span> ${pointCount} points <span class="sep">·</span> ${calculateDate(createdAt)}</span>
+  </span>
+  <svg class="search-result-item__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+  `
+  return card
+}
+
+function calculateDate(timestamp) {
+  const months = [
+    "Jan", "Feb", "Mar",
+    "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep",
+    "Oct", "Nov", "Dec"
+  ]
+  
+  let date = new Date(timestamp)
+  let day = date.getDate()
+  let month = date.getMonth()
+  
+ return `${months[month]} ${day}`
+}
+
 getAllTrailsFromDb()
 
 
@@ -217,4 +291,26 @@ document.querySelector('#switch_to_all_trail').addEventListener('click', () => {
   favoriteFilter.classList.remove('is-selected')
   allFilter.classList.add('is-selected')
   getAllTrailsFromDb()
+})
+
+trailSearchInput.addEventListener('input', () => {
+  searchTrail()
+})
+
+clearSearchBtn.addEventListener('click', () => {
+  trailSearchInput.value = ""
+  searchTrail()
+})
+
+searchResultsList.addEventListener('click', (event) => {
+  let clickedElement = event.target.closest(".search-result-item")
+  if (!clickedElement) {
+    return
+  }
+  let trailId = clickedElement.getAttribute("data-trail-id")
+  if (!trailId) {
+    console.log("trail id does not exist!")
+  return
+  }
+  window.location.href = `trail-detail.html?trailid=${trailId}`
 })

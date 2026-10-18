@@ -18,13 +18,49 @@
       </a>
     </header>
 
-    <div class="search-bar">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      <input type="search" id="trailSearchInput" placeholder="Search your trails…" aria-label="Search trails">
-      <button class="search-bar__filter" id="trailFilterBtn" aria-label="Filter trails">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      </button>
+    <div class="search-container">
+  <div class="search-input-wrapper">
+    <svg class="search-input__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <input
+      type="text"
+      id="trail-search"
+      class="search-input"
+      placeholder="Search trail names…"
+      autocomplete="off"
+      aria-label="Search trails"
+      aria-expanded="false"
+      aria-controls="search-results"
+    >
+    <button type="button" id="clear-search" class="clear-search hidden" aria-label="Clear search">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+
+  <!-- Dropdown — hidden by default. JS toggles the "hidden" class and
+       fills #search-results-list / #search-results-count. -->
+  <div id="search-results" class="search-dropdown hidden">
+
+    <div class="search-dropdown__header">
+      <span id="search-results-count" class="search-dropdown__count">Matching trails (0)</span>
     </div>
+
+    <div id="search-results-list" class="search-result-list">
+      <!-- Results injected here by trails.js, one .search-result-item per trail -->
+      
+    </div>
+
+    <!-- No-results state — JS shows this (and hides search-results-list)
+         when the query matches nothing. -->
+    <div id="search-no-results" class="search-no-results hidden">
+      <span class="search-no-results__icon">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </span>
+      <h3>No matching trails</h3>
+      <p>Try another trail name.</p>
+    </div>
+
+  </div>
+</div>
 
     <div class="filter-chips">
       <button class="filter-chip is-selected" id="all_filter" data-filter="all">All Trails</button>
