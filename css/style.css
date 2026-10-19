@@ -2559,3 +2559,20 @@ svg {
 
 /* ---- Utility ---- */
 .hidden{ display: none !important; }
+
+/* ==========================================================================
+   FAVORITE BUTTON — outline/filled star swap
+   Toggle by adding/removing "is-favorited" on #detailFavoriteBtn.
+   CSS handles which icon shows and the color change; JS only toggles
+   the one class (and aria-pressed, for accessibility).
+   ========================================================================== */
+.fav-icon{ display: block; }
+.fav-icon--filled{ display: none; }
+
+.detail-fav-btn.is-favorited .fav-icon--outline{ display: none; }
+.detail-fav-btn.is-favorited .fav-icon--filled{ display: block; }
+.detail-fav-btn.is-favorited{
+  color: var(--brass-400);
+  border-color: rgba(217,146,46,0.4);
+  background: rgba(217,146,46,0.10);
+}

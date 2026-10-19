@@ -103,3 +103,18 @@ export async function checkIfExist(nameValue, currentID) {
   console.log("Name already exist: ", Boolean(exists))
   return Boolean(exists);
 }
+
+export async function saveFvoriteStatus(trailID, value) {
+  try {
+    const item = await db.trail.update(trailID, {is_favorite: value})
+    return {
+      status: "success",
+      message_code: item
+    }
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message
+    }
+  }
+}

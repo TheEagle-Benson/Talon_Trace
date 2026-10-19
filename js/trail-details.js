@@ -1,4 +1,4 @@
-import { getTrail, updateTrail, checkIfExist, deleteTrail } from "./db.js";
+import { getTrail, updateTrail, checkIfExist, deleteTrail, saveFvoriteStatus } from "./db.js";
 import { notify } from "./utils.js"
 
 
@@ -31,9 +31,14 @@ const deleteTrailModalName = document.querySelector('#deleteTrailModalName')
 const cancelDeleteTrailBtn = document.querySelector('#cancelDeleteTrailBtn')
 const confirmDeleteTrailBtn = document.querySelector('#confirmDeleteTrailBtn')
 
+const backBtn = document.querySelector('#detailBackBtn')
+
+const favoriteBtn = document.querySelector('#detailFavoriteBtn')
+
 
 let trailID
 let trailObj 
+let isFavorite = false
 
 
 
@@ -56,6 +61,7 @@ function displayTrailDetails() {
   let trailAccurracy = trailObj.trail.coords[0].accuracy 
   let duration = calculateDuration(trailObj.trail.start_time, trailObj.trail.end_time)
   let date = calculateDateTime(trailObj.trail.created_at)
+  isFavorite = trailObj.trail.is_favorite
 
   mapBadge.textContent = trailName
   detailTrailName.textContent = trailName
@@ -64,7 +70,8 @@ function displayTrailDetails() {
   detailTrailNotes.textContent = trailNotes
   detailTrailPointCount.textContent = pointCount
   detailTrailDate.textContent = date 
-  detailTrailDuration.innerHTML = duration 
+  detailTrailDuration.innerHTML = duration
+  favoriteBtn.classList.toggle('is-favorited', isFavorite)
 }
 
 function calculateDateTime(timestamp) {
@@ -117,13 +124,114 @@ function closeModal() {
   }
 }
 
+async function markFavorite() {
+  let hasIsFavorite = Object.hasOwn(trailObj.trail, 'is_favorite')
+
+  if (hasIsFavorite && isFavorite) {
+    try {
+      isFavorite = false
+      let res = await saveFvoriteStatus(trailID, isFavorite)
+      
+      if (res.status === 'error') {
+        isFavorite = true
+        console.error(res.message)
+        notify("An Error Occurred", "toast-error")
+        return
+      }
+      
+      if(res.message_code === 1) {
+        favoriteBtn.classList.toggle('is-favorited')
+        notify("Favorite Status Updated", "toast-info")
+        console.log('it has a favorite property and is favorite is true')
+        return 
+      }
+
+      if (res.message_code === 0) {
+        notify("Trail Not Found.", "toast-error")
+        isFavorite = true
+        return
+      }
+    } catch (error) {
+      console.log("Fav Error: ", error)
+      isFavorite = true
+      notify("Could Not Update Favorite Status", "toast-error")
+    }
+  } else if (hasIsFavorite && isFavorite === false) {
+    try {
+      isFavorite = true
+      let res = await saveFvoriteStatus(trailID, isFavorite)
+
+      if (res.status === 'error') {
+        isFavorite = false
+        console.error(res.message)
+        notify("An Error Occurred", "toast-error")
+        return 
+      }
+    
+      if (res.message_code === 1) {
+        favoriteBtn.classList.toggle('is-favorited')
+        notify("Favorite Status Updated", "toast-info")
+        console.log('it has a favorite property and is favorite is true')
+        return 
+      }
+
+      if (res.message_code === 0) {
+        notify("Trail Not Found.", "toast-error")
+        isFavorite = false
+        return
+      }
+      
+    } catch (error) {
+      console.log("Fav Error: ", error)
+      isFavorite = false
+      notify("Could Not Update Favorite Status", "toast-error")
+    }
+  }
+
+  if (!hasIsFavorite) {
+    try {
+      isFavorite = true
+      let res = await saveFvoriteStatus(trailID, isFavorite)
+
+      if (res.status === 'error') {
+        isFavorite = false
+        console.error(res.message)
+        notify("An Error Occurred", "toast-error")
+        return
+      }
+    
+      if (res.message_code === 1) {
+        favoriteBtn.classList.toggle('is-favorited')
+      notify("Favorite Status Updated", "toast-info")
+      console.log('it has a favorite property and is favorite is true')
+      return 
+      }
+
+      if (res.message_code === 0) {
+        notify("Trail Not Found.", "toast-error")
+        isFavorite = false
+        return
+      }
+    } catch (error) {
+      console.log("Fav Error: ", error)
+      isFavorite = false
+      notify("Could Not Update Favorite Status", "toast-error")
+    }
+  }
+}
 
 
+if(trailObj.status !== 'error') {
+  displayTrailDetails()
+}
 
 
-displayTrailDetails()
 
 editTrailInfoBtn.addEventListener('click', () => {
+  if (trailObj.status === 'error') {
+    console.log("Database not loaded")
+    return 
+  }
   openModal()
   let trailName = trailObj.trail.name
   trailModalTitle.textContent = trailName
@@ -137,6 +245,10 @@ cancelEditTrailBtn.addEventListener('click', () => {
 
 confirmEditTrailBtn.addEventListener('click', async (event) => {
   event.preventDefault()
+  if (trailObj.status === "error") {
+    console.log("Database failed to load")
+    return 
+  }
   try {
     let newTrailName = editTrailNameInput.value.trim()
     let newTrailNotes = editTrailNotesInput.value.trim()
@@ -198,6 +310,10 @@ cancelDeleteTrailBtn.addEventListener('click', () => {
 })
 
 confirmDeleteTrailBtn.addEventListener('click', async () => {
+  if (trailObj.status === 'error') {
+    console.log("Database failed to load")
+    return
+  }
   try {
     let res = await deleteTrail(trailID)
     if (res.status === 'success') {
@@ -221,4 +337,12 @@ confirmDeleteTrailBtn.addEventListener('click', async () => {
     notify('An Unknown Error Occurred', 'toast-error')
     return
   }
+})
+
+backBtn.addEventListener('click', () => {
+  window.history.back()
+})
+
+favoriteBtn.addEventListener('click', () => {
+  markFavorite()
 })
