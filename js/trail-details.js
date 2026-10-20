@@ -35,6 +35,8 @@ const backBtn = document.querySelector('#detailBackBtn')
 
 const favoriteBtn = document.querySelector('#detailFavoriteBtn')
 
+const shareTrailDetailBtn = document.querySelector('#detailShareBtn')
+
 
 let trailID
 let trailObj 
@@ -221,6 +223,67 @@ async function markFavorite() {
 }
 
 
+async function shareTrailSummary() {
+  if (trailObj.status === 'error') {
+    console.log('Database failed to load');
+    notify("Could Not Load Trail", "toast-error");
+    return;
+  }
+
+  const trail = trailObj.trail;
+
+  let shareText = `Trail: ${trail.name}
+Distance: ${(trail.total_distance / 1000).toFixed(2)} km
+Duration: ${calculateDuration(trail.start_time, trail.end_time)}
+Recorded: ${calculateDateTime(trail.created_at)}
+Recorded points: ${trail.point_count}`;
+
+  if (trail.notes !== "") {
+    shareText += `\nNotes: ${trail.notes}`;
+  }
+
+  const shareData = {
+    title: `Talon Trace - ${trail.name}`,
+    text: shareText
+  };
+
+  // Check whether the browser supports sharing.
+  if (typeof navigator.share === 'function') {
+    try {
+      await navigator.share(shareData);
+      console.log('Trail shared successfully');
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        // The user closed the share sheet.
+        console.log('Sharing cancelled');
+        return;
+      }
+
+      console.error('Share failed:', error);
+      notify("Could Not Share Trail", "toast-error");
+    }
+
+    return;
+  }
+
+  // Fallback for browsers without the Web Share API.
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(shareText);
+      notify("Trail Summary Copied", "toast-info");
+    } catch (error) {
+      console.error('Clipboard failed:', error);
+      notify("Could Not Copy Trail Summary", "toast-error");
+    }
+
+    return;
+  }
+
+  notify("Sharing And Clipboard Are Not Supported", "toast-error");
+}
+
+
+
 if(trailObj.status !== 'error') {
   displayTrailDetails()
 }
@@ -345,4 +408,9 @@ backBtn.addEventListener('click', () => {
 
 favoriteBtn.addEventListener('click', () => {
   markFavorite()
+})
+
+shareTrailDetailBtn.addEventListener('click', async () => {
+    let res = await shareTrailSummary()
+  console.log(res)
 })
