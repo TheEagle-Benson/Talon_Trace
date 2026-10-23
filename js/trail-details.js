@@ -1,5 +1,6 @@
 import { getTrail, updateTrail, checkIfExist, deleteTrail, saveFvoriteStatus } from "./db.js";
 import { notify } from "./utils.js"
+import {createGPX } from "./export-gpx.js"
 
 
 
@@ -36,6 +37,8 @@ const backBtn = document.querySelector('#detailBackBtn')
 const favoriteBtn = document.querySelector('#detailFavoriteBtn')
 
 const shareTrailDetailBtn = document.querySelector('#detailShareBtn')
+
+const exportGPXBtn = document.querySelector('#exportGpxBtn')
 
 
 let trailID
@@ -413,4 +416,12 @@ favoriteBtn.addEventListener('click', () => {
 shareTrailDetailBtn.addEventListener('click', async () => {
     let res = await shareTrailSummary()
   console.log(res)
+})
+
+exportGPXBtn.addEventListener('click', () => {
+  if (trailObj.status === 'error') {
+    console.log('failed to load database')
+    return 
+  }
+  createGPX(trailObj)
 })
