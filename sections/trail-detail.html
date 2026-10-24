@@ -339,6 +339,76 @@
     </button>
   </div>
 </div>
+      <!-- ==================== GPX EXPORT INFO MODAL ====================
+     Opened by #exportGpxBtn. Presentation only: the Export GPX button
+     (#confirmExportGpxBtn) is the single hook where your existing
+     exporter gets called from trail-details.js.
+     ================================================================ -->
+<div class="modal-scrim" id="exportGpxModalScrim"></div>
+<div class="save-trail-modal info-modal" id="exportGpxModal" role="dialog" aria-modal="true" aria-labelledby="exportGpxModalTitle" aria-describedby="exportGpxModalIntro" tabindex="-1">
+  <div class="save-trail-modal__handle"></div>
+
+  <div class="save-trail-modal__header">
+    <span class="save-trail-modal__icon">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <div>
+      <h2 class="save-trail-modal__title" id="exportGpxModalTitle">Export your trail</h2>
+      <p class="save-trail-modal__subtitle">GPX 1.1 · .gpx file</p>
+    </div>
+  </div>
+
+  <p class="info-modal__intro" id="exportGpxModalIntro">
+    Save your recorded route as a GPX file and use it with compatible GPS and mapping applications.
+  </p>
+
+  <ul class="info-benefits">
+    <li class="info-benefit">
+      <span class="info-benefit__icon info-benefit__icon--teal">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2V6z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="info-benefit__text">
+        <span class="info-benefit__title">View your route elsewhere</span>
+        <span class="info-benefit__desc">Compatible GPX viewers and mapping tools can display your exported track on their own maps.</span>
+      </span>
+    </li>
+
+    <li class="info-benefit">
+      <span class="info-benefit__icon info-benefit__icon--brass">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M18 8a3 3 0 100-6 3 3 0 000 6zM6 15a3 3 0 100-6 3 3 0 000 6zM18 22a3 3 0 100-6 3 3 0 000 6zM8.6 13.5l6.8-4M8.6 10.5l6.8 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      </span>
+      <span class="info-benefit__text">
+        <span class="info-benefit__title">Keep or share a copy</span>
+        <span class="info-benefit__desc">Store the file as a backup, or send it to someone else.</span>
+      </span>
+    </li>
+
+    <li class="info-benefit">
+      <span class="info-benefit__icon info-benefit__icon--muted">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21V9m0 0l-4 4m4-4l4 4M5 3h14" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="info-benefit__text">
+        <span class="info-benefit__title">More possibilities ahead <span class="info-benefit__tag">Planned</span></span>
+        <span class="info-benefit__desc">A future version of Talon Trace may support importing GPX files. Import isn't available yet.</span>
+      </span>
+    </li>
+  </ul>
+
+  <p class="info-modal__reassure">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Exporting creates a separate file. Your saved trail stays in Talon Trace, untouched.
+  </p>
+
+  <div class="save-trail-modal__actions">
+    <button type="button" class="btn btn--secondary" id="cancelExportGpxBtn">Cancel</button>
+    <button type="button" class="btn btn--primary" id="confirmExportGpxBtn">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Export GPX
+    </button>
+  </div>
+
+  <p class="info-modal__footnote">Other apps may not display Talon Trace's extra trail details.</p>
+</div>
       <!-- ==================== BOTTOM NAVIGATION ==================== -->
       <nav class="bottom-nav" aria-label="Primary">
         <a

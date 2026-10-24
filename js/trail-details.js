@@ -40,6 +40,12 @@ const shareTrailDetailBtn = document.querySelector('#detailShareBtn')
 
 const exportGPXBtn = document.querySelector('#exportGpxBtn')
 
+const exportModalScrim = document.querySelector('#exportGpxModalScrim')
+const exportGpxModal = document.querySelector('#exportGpxModal')
+const cancelExportGpxBtn = document.querySelector('#cancelExportGpxBtn')
+const confirmExportGpxBtn = document.querySelector('#confirmExportGpxBtn')
+
+
 
 let trailID
 let trailObj 
@@ -421,7 +427,27 @@ shareTrailDetailBtn.addEventListener('click', async () => {
 exportGPXBtn.addEventListener('click', () => {
   if (trailObj.status === 'error') {
     console.log('failed to load database')
+    notify("Database Failed To Load.", "toast-error")
     return 
   }
-  createGPX(trailObj)
+  exportModalScrim.classList.add('is-open')
+  exportGpxModal.classList.add('is-open')
+  
+})
+
+cancelExportGpxBtn.addEventListener('click', () => {
+  exportModalScrim.classList.remove('is-open')
+  exportGpxModal.classList.remove('is-open')
+})
+
+confirmExportGpxBtn.addEventListener('click', () => {
+  try {
+    createGPX(trailObj)
+    exportModalScrim.classList.remove('is-open')
+  exportGpxModal.classList.remove('is-open')
+    notify("GPX File Is On Its Way!, Check Your Downloads Folder", "toast-success")
+  } catch(error) {
+    console.log("An error ocucurred, couldn't export trail: ", error)
+    notify("Couldn't Export Trail, Try Again", "toast-error")
+  }
 })

@@ -2576,3 +2576,124 @@ svg {
   border-color: rgba(217,146,46,0.4);
   background: rgba(217,146,46,0.10);
 }
+
+/* ==========================================================================
+   GPX EXPORT INFO MODAL
+   Extends the .save-trail-modal sheet (same scrim, handle, header, actions).
+   Adds visibility handling so the closed modal's buttons can't be tabbed to.
+   ========================================================================== */
+.save-trail-modal.info-modal{
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
+  visibility: hidden;
+  transition: transform 0.32s var(--ease), visibility 0s linear 0.32s;
+}
+.save-trail-modal.info-modal.is-open{
+  visibility: visible;
+  transition: transform 0.32s var(--ease), visibility 0s;
+}
+.save-trail-modal.info-modal:focus{ outline: none; }
+
+@media (min-width: 480px){
+  .save-trail-modal.info-modal{
+    transition: transform 0.25s var(--ease), opacity 0.25s var(--ease), visibility 0s linear 0.25s;
+  }
+  .save-trail-modal.info-modal.is-open{
+    transition: transform 0.25s var(--ease), opacity 0.25s var(--ease), visibility 0s;
+  }
+}
+
+.info-modal__intro{
+  font-size: 13.5px;
+  color: var(--fog-400);
+  line-height: 1.55;
+  margin-bottom: 18px;
+}
+
+.info-benefits{
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.info-benefit{
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.info-benefit__icon{
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.info-benefit__icon svg{ width: 17px; height: 17px; }
+.info-benefit__icon--teal{ background: rgba(63,201,168,0.12); color: var(--teal-400); }
+.info-benefit__icon--brass{ background: rgba(217,146,46,0.14); color: var(--brass-400); }
+.info-benefit__icon--muted{ background: var(--ink-800); color: var(--fog-400); }
+
+.info-benefit__text{
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.info-benefit__title{
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--paper-100);
+}
+.info-benefit__desc{
+  font-size: 12.5px;
+  color: var(--fog-500);
+  line-height: 1.5;
+}
+.info-benefit__tag{
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--ink-600);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fog-400);
+  vertical-align: 1px;
+}
+
+.info-modal__reassure{
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--teal-300);
+  background: rgba(63,201,168,0.08);
+  border: 1px solid rgba(63,201,168,0.22);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-bottom: 18px;
+  line-height: 1.45;
+}
+.info-modal__reassure svg{
+  width: 15px; height: 15px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.info-modal__footnote{
+  font-size: 11px;
+  color: var(--fog-500);
+  text-align: center;
+  margin-top: 12px;
+}
+
+/* Respect reduced-motion for all modal transitions */
+@media (prefers-reduced-motion: reduce){
+  .modal-scrim, 
+  .save-trail-modal,
+  .confirm-modal{
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+}
