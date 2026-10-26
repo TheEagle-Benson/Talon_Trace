@@ -1,6 +1,7 @@
 import { getTrail, updateTrail, checkIfExist, deleteTrail, saveFvoriteStatus } from "./db.js";
 import { notify } from "./utils.js"
 import {createGPX } from "./export-gpx.js"
+import { watchLocation } from "./trail-navigation.js"
 
 
 
@@ -44,6 +45,8 @@ const exportModalScrim = document.querySelector('#exportGpxModalScrim')
 const exportGpxModal = document.querySelector('#exportGpxModal')
 const cancelExportGpxBtn = document.querySelector('#cancelExportGpxBtn')
 const confirmExportGpxBtn = document.querySelector('#confirmExportGpxBtn')
+
+const followTrailBtn = document.querySelector('#followTrailBtn') 
 
 
 
@@ -450,4 +453,13 @@ confirmExportGpxBtn.addEventListener('click', () => {
     console.log("An error ocucurred, couldn't export trail: ", error)
     notify("Couldn't Export Trail, Try Again", "toast-error")
   }
+})
+
+followTrailBtn.addEventListener('click', () => {
+  if (trailObj.status === 'error') {
+    console.log('failed to load database')
+    notify("Database Failed To Load.", "toast-error")
+    return 
+  }
+  let coords = watchLocation(trailObj.trail.coords)
 })
